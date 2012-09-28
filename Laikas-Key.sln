@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laikas-Key", "Laikas-Key\Laikas-Key\Laikas-Key.csproj", "{1ACF54DF-7393-44FF-8FD4-31460E6C1C8C}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Laikas-KeyContent", "Laikas-Key\Laikas-KeyContent\Laikas-KeyContent.contentproj", "{50F00198-FCDD-40AB-9DF1-F6D275019916}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laikas-KeyContent", "Laikas-Key\Laikas-KeyContent\Laikas-KeyContent.contentproj", "{50F00198-FCDD-40AB-9DF1-F6D275019916}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiUtil", "Laikas-Key\MiUtil\MiUtil.csproj", "{8734C993-8822-49CF-9BA5-2562F2832891}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{1ACF54DF-7393-44FF-8FD4-31460E6C1C8C}.Release|x86.Build.0 = Release|x86
 		{50F00198-FCDD-40AB-9DF1-F6D275019916}.Debug|x86.ActiveCfg = Debug|x86
 		{50F00198-FCDD-40AB-9DF1-F6D275019916}.Release|x86.ActiveCfg = Release|x86
+		{8734C993-8822-49CF-9BA5-2562F2832891}.Debug|x86.ActiveCfg = Debug|x86
+		{8734C993-8822-49CF-9BA5-2562F2832891}.Debug|x86.Build.0 = Debug|x86
+		{8734C993-8822-49CF-9BA5-2562F2832891}.Release|x86.ActiveCfg = Release|x86
+		{8734C993-8822-49CF-9BA5-2562F2832891}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
