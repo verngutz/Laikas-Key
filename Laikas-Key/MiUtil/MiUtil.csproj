@@ -107,6 +107,7 @@
     <Compile Include="MiScript.cs" />
     <Compile Include="MiScriptEngine.cs" />
     <Compile Include="MiScriptState.cs" />
+    <Compile Include="MiStandardControllerState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

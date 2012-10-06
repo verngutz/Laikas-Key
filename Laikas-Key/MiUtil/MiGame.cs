@@ -12,7 +12,7 @@ namespace MiUtil
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
-
+        
         private LinkedList<MiScreen> toDraw;
         private Stack<MiScreen> toUpdate;
 
