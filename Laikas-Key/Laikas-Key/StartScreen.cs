@@ -10,7 +10,7 @@ namespace Laikas_Key
 {
     class StartScreen : MiScreen
     {
-        private MiScreen gameScreen;
+        public static StartScreen Instance { set; get; }
 
         private MiAnimatingComponent newGameButtonBase;
         private MiAnimatingComponent quitGameButtonBase;
@@ -22,44 +22,46 @@ namespace Laikas_Key
         public StartScreen(MiGame game)
             : base(game)
         {
-            //
-            // Game Screen
-            //
-            gameScreen = new WorldScreen(game);
+            if (Instance == null)
+            {
+                //
+                // New Game Button
+                //
+                newGameButton = new MiButton();
+                newGameButton.Pressed += new MiScript(
+                    delegate
+                    {
+                        Game.ToUpdate.Pop();
+                        Game.ToDraw.RemoveLast();
+                        Game.ToUpdate.Push(WorldScreen.Instance);
+                        Game.ToDraw.AddLast(WorldScreen.Instance);
+                        return null;
+                    });
+                newGameButtonBase = new MiAnimatingComponent(game, 100, 300);
 
-            //
-            // New Game Button
-            //
-            newGameButton = new MiButton();
-            newGameButton.Pressed += new MiScript(
-                delegate
-                {
-                    Game.ToUpdate.Pop();
-                    Game.ToDraw.RemoveLast();
-                    Game.ToUpdate.Push(gameScreen);
-                    Game.ToDraw.AddLast(gameScreen);
-                    return null;
-                });
-            newGameButtonBase = new MiAnimatingComponent(game, 100, 300);
+                //
+                // Quit Game Button
+                //
+                quitGameButton = new MiButton();
+                quitGameButton.Pressed += new MiScript(
+                    delegate
+                    {
+                        Game.Exit();
+                        return null;
+                    });
+                quitGameButtonBase = new MiAnimatingComponent(game, 100, 400);
 
-            //
-            // Quit Game Button
-            //
-            quitGameButton = new MiButton();
-            quitGameButton.Pressed += new MiScript(
-                delegate
-                {
-                    Game.Exit();
-                    return null;
-                });
-            quitGameButtonBase = new MiAnimatingComponent(game, 100, 400);
+                //
+                // Cursor
+                //
+                cursor = new MiAnimatingComponent(game, 100, 300);
 
-            //
-            // Cursor
-            //
-            cursor = new MiAnimatingComponent(game, 100, 300);
-
-            ActiveButton = newGameButton;
+                ActiveButton = newGameButton;
+            }
+            else
+            {
+                throw new Exception("Start Screen Already Initialized");
+            }
         }
 
         public override void LoadContent()
@@ -89,7 +91,7 @@ namespace Laikas_Key
         {
             if (ActiveButton == quitGameButton)
             {
-                cursor.Position = new Vector2(100, 300);
+                cursor.Position = newGameButtonBase.Position;
                 ActiveButton = newGameButton;
             }
             yield break;
@@ -99,7 +101,7 @@ namespace Laikas_Key
         {
             if (ActiveButton == newGameButton)
             {
-                cursor.Position = new Vector2(100, 400);
+                cursor.Position = quitGameButtonBase.Position;
                 ActiveButton = quitGameButton;
             }
             yield break;

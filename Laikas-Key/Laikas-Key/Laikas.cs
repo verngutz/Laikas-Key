@@ -17,32 +17,31 @@ namespace Laikas_Key
     /// </summary>
     public class Laikas : MiGame
     {
-        private MiScreen startScreen;
-        internal MiScreen StartScreen { get { return startScreen; } }
-
         protected override void Initialize()
         {
             // Set the game resolution
-            MiResolution.SetVirtualResolution(1200, 900);
+            MiResolution.SetVirtualResolution(800, 600);
             MiResolution.SetResolution(800, 600, false);
 
             // Initialize Input Handler
             inputHandler = new InputHandler(this);
 
             // Initialize screens
-            startScreen = new StartScreen(this);
+            StartScreen.Instance = new StartScreen(this);
+            WorldScreen.Instance = new WorldScreen(this);
 
             // Set active screen
-            ToDraw.AddLast(startScreen);
-            ToUpdate.Push(startScreen);
+            ToDraw.AddLast(StartScreen.Instance);
+            ToUpdate.Push(StartScreen.Instance);
 
-            ScriptEngine.ExecuteScript(new MiScript(startScreen.EntrySequence));
+            ScriptEngine.ExecuteScript(new MiScript(StartScreen.Instance.EntrySequence));
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            startScreen.LoadContent();
+            StartScreen.Instance.LoadContent();
+            WorldScreen.Instance.LoadContent();
             base.LoadContent();
         }
     }
