@@ -10,22 +10,19 @@ namespace Laikas_Key
 {
     class Controller : MiController<MiStandardControllerState>
     {
-        public static MiControl LEFT = new MiControl(0);
-        public static MiControl RIGHT = new MiControl(1);
-        public static MiControl UP = new MiControl(2);
-        public static MiControl DOWN = new MiControl(3);
-        public static MiControl A = new MiControl(4);
-        public static MiControl B = new MiControl(5);
-        public static MiControl START = new MiControl(6);
+        public static MiControl LEFT = new MiControl();
+        public static MiControl RIGHT = new MiControl();
+        public static MiControl UP = new MiControl();
+        public static MiControl DOWN = new MiControl();
+        public static MiControl A = new MiControl();
+        public static MiControl B = new MiControl();
+        public static MiControl START = new MiControl();
         
         new public static MiStandardControllerState GetState()
         {
             GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
             KeyboardState keyboardState = Keyboard.GetState();
-            if (controllerState == null)
-            {
-                controllerState = new MiStandardControllerState();
-            }
+            controllerState = new MiStandardControllerState();
             if (gamePadState.IsConnected)
             {
                 controllerState[A] = gamePadState.Buttons.A;

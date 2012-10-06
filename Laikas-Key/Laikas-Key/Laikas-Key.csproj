@@ -78,6 +78,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Laikas.cs" />
     <Compile Include="StartScreen.cs" />
+    <Compile Include="WorldScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Laikas.ico" />

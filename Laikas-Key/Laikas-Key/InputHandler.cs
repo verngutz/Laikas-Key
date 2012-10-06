@@ -9,6 +9,7 @@ namespace Laikas_Key
 {
     class InputHandler : MiInputHandler
     {
+        int frame = 0;
         public InputHandler(MiGame game)
             : base(game)
         {
