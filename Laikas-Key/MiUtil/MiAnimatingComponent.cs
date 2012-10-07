@@ -14,7 +14,7 @@ namespace MiUtil
     /// </summary>
     public class MiAnimatingComponent : MiDrawableComponent
     {
-        private enum SpriteStates { DEFAULT };
+        private enum SpriteStates { DEFAULT }
         protected Dictionary<Enum, Queue<KeyValuePair<Texture2D, int>>> spriteQueue;
         private int spriteQueueTimer;
         public bool SpriteQueueLoop { get; set; }
@@ -124,6 +124,10 @@ namespace MiUtil
         /// <param name="time">The number of frames the texture will be drawn</param>
         public virtual void AddTexture(Texture2D texture, Enum spriteState, int time)
         {
+            if (!spriteQueue.ContainsKey(spriteState))
+            {
+                spriteQueue[spriteState] = new Queue<KeyValuePair<Texture2D, int>>();
+            }
             spriteQueue[spriteState].Enqueue(new KeyValuePair<Texture2D, int>(texture, time));
         }
 

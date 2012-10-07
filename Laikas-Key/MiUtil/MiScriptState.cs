@@ -12,9 +12,16 @@ namespace MiUtil
 
         public MiScriptState(MiScript script)
         {
-            this.script = script;
             scriptEnumerator = script();
-            sleepTime = scriptEnumerator.Current;
+            if (scriptEnumerator == null)
+            {
+                this.script = null;
+            }
+            else
+            {
+                this.script = script;
+                sleepTime = scriptEnumerator.Current;
+            }
         }
 
         public bool IsComplete()

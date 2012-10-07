@@ -29,29 +29,6 @@ namespace MiUtil
             }
         }
 
-        private class MiTileSprite : MiDrawableComponent
-        {
-            private MiAnimatingComponent tileGraphic;
-
-            public MiTileSprite(MiGame game, Texture2D texture, int x, int y, int width, int height)
-                : base(game)
-            {
-                tileGraphic = new MiAnimatingComponent(game, x, y, width,height);
-                tileGraphic.AddTexture(texture, 0);
-            }
-
-            public void Move(int dx, int dy, int dt)
-            {
-                tileGraphic.XPositionOverTime.Keys.Add(new CurveKey(tileGraphic.Position.X + dx, dt));
-                tileGraphic.YPositionOverTime.Keys.Add(new CurveKey(tileGraphic.Position.Y + dy, dt));
-            }
-
-            public override void Draw(GameTime gameTime)
-            {
-                tileGraphic.Draw(gameTime);
-            }
-        }
-
         private int tileWidth;
         public int TileWidth { get { return tileWidth; } }
 
@@ -99,6 +76,14 @@ namespace MiUtil
             foreach (MiTileType tile in tiles.Values)
             {
                 tile.LoadContent();
+            }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            foreach (MiAnimatingComponent tile in mapGraphics)
+            {
+                tile.Update(gameTime);
             }
         }
 

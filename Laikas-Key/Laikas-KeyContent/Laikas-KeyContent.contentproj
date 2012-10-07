@@ -64,13 +64,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="tao.png">
-      <Name>tao</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Grass.png">
       <Name>Grass</Name>
       <Importer>TextureImporter</Importer>
@@ -78,6 +71,35 @@
     </Compile>
     <Compile Include="Road.png">
       <Name>Road</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="taoDown.png">
+      <Name>taoDown</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="taoLeft.png">
+      <Name>taoLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="taoRight.png">
+      <Name>taoRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="taoUp.png">
+      <Name>taoUp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Treasure.png">
+      <Name>Treasure</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

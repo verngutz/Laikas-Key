@@ -76,6 +76,7 @@
     <Compile Include="Character.cs" />
     <Compile Include="BattleScreen.cs" />
     <Compile Include="Controller.cs" />
+    <Compile Include="DialogScreen.cs" />
     <Compile Include="InputHandler.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Locations.cs" />
