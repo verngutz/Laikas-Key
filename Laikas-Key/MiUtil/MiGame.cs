@@ -16,9 +16,6 @@ namespace MiUtil
         private LinkedList<MiScreen> toDraw;
         private Stack<MiScreen> toUpdate;
 
-        public LinkedList<MiScreen> ToDraw { get { return toDraw; } }
-        public Stack<MiScreen> ToUpdate { get { return toUpdate; } }
-
         protected MiInputHandler inputHandler;
         public MiInputHandler InputHandler { get { return inputHandler; } }
 
@@ -68,10 +65,10 @@ namespace MiUtil
         {
             scriptEngine.Update(gameTime);
 
-            inputHandler.Focused = ToUpdate.Peek();
+            inputHandler.Focused = toUpdate.Peek();
             inputHandler.Update(gameTime);
 
-            foreach (MiScreen screen in ToUpdate)
+            foreach (MiScreen screen in toUpdate)
                 screen.Update(gameTime);
 
 #if DEBUG
@@ -94,7 +91,7 @@ namespace MiUtil
 
             SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, MiResolution.GetTransformationMatrix());
 
-            foreach (MiScreen screen in ToDraw)
+            foreach (MiScreen screen in toDraw)
                 screen.Draw(gameTime);
 #if DEBUG
             frameCounter++;
@@ -104,6 +101,24 @@ namespace MiUtil
             SpriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void PushScreen(MiScreen screen)
+        {
+            toUpdate.Push(screen);
+            toDraw.AddLast(screen);
+        }
+
+        public void PopScreen()
+        {
+            toUpdate.Pop();
+            toDraw.RemoveLast();
+        }
+
+        public void RemoveAllScreens()
+        {
+            toUpdate.Clear();
+            toDraw.Clear();
         }
     }
 }

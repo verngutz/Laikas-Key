@@ -31,10 +31,8 @@ namespace Laikas_Key
                 newGameButton.Pressed += new MiScript(
                     delegate
                     {
-                        Game.ToUpdate.Pop();
-                        Game.ToDraw.RemoveLast();
-                        Game.ToUpdate.Push(WorldScreen.Instance);
-                        Game.ToDraw.AddLast(WorldScreen.Instance);
+                        Game.RemoveAllScreens();
+                        Game.PushScreen(WorldScreen.Instance);
                         return null;
                     });
                 newGameButtonBase = new MiAnimatingComponent(game, 100, 300);

@@ -40,6 +40,7 @@ namespace Laikas_Key
 
             private Location location;
             public string Label { get { return location.Name; } }
+            public Location.State ControllingFaction { get { return location.ControllingFaction; } }
 
             public LocationUI(MiGame game, int x, int y, Location location)
             {
@@ -121,6 +122,8 @@ namespace Laikas_Key
                 inputResponses[Controller.DOWN] = new MiScript(Downed);
                 inputResponses[Controller.LEFT] = new MiScript(Lefted);
                 inputResponses[Controller.RIGHT] = new MiScript(Righted);
+                inputResponses[Controller.A] = new MiScript(EnterLocation);
+                inputResponses[Controller.START] = new MiScript(Escape);
             }
             else
             {
@@ -188,6 +191,28 @@ namespace Laikas_Key
                 activeLocation = activeLocation.Neighbors[Controller.RIGHT];
                 cursor.Position = activeLocation.ButtonBase.Position;
             }
+            yield break;
+        }
+
+        public IEnumerator<ulong> EnterLocation()
+        {
+            Game.RemoveAllScreens();
+            switch (activeLocation.ControllingFaction)
+            {
+                case Location.State.ALLY:
+                    Game.PushScreen(TownScreen.Instance);
+                    break;
+                case Location.State.ENEMY:
+                    Game.PushScreen(BattleScreen.Instance);
+                    break;
+            }
+            yield break;
+        }
+
+        public IEnumerator<ulong> Escape()
+        {
+            Game.RemoveAllScreens();
+            Game.PushScreen(StartScreen.Instance);
             yield break;
         }
     }

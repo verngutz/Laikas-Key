@@ -29,10 +29,11 @@ namespace Laikas_Key
             // Initialize screens
             StartScreen.Instance = new StartScreen(this);
             WorldScreen.Instance = new WorldScreen(this);
+            TownScreen.Instance = new TownScreen(this);
+            BattleScreen.Instance = new BattleScreen(this);
 
             // Set active screen
-            ToDraw.AddLast(StartScreen.Instance);
-            ToUpdate.Push(StartScreen.Instance);
+            PushScreen(StartScreen.Instance);
 
             ScriptEngine.ExecuteScript(new MiScript(StartScreen.Instance.EntrySequence));
             base.Initialize();
@@ -42,6 +43,8 @@ namespace Laikas_Key
         {
             StartScreen.Instance.LoadContent();
             WorldScreen.Instance.LoadContent();
+            TownScreen.Instance.LoadContent();
+            BattleScreen.Instance.LoadContent();
             base.LoadContent();
         }
     }
