@@ -42,13 +42,13 @@ namespace Laikas_Key
             public string Label { get { return location.Name; } }
             public Location.State ControllingFaction { get { return location.ControllingFaction; } }
 
-            public LocationUI(MiGame game, int x, int y, Location location)
+            public LocationUI(MiGame game, int x, int y, int width, int height, Location location)
             {
                 this.game = game;
                 Neighbors = new Dictionary<MiControl, LocationUI>();
-                allyButtonBase = new MiAnimatingComponent(game, x, y);
-                enemyButtonBase = new MiAnimatingComponent(game, x, y);
-                neutralButtonBase = new MiAnimatingComponent(game, x, y);
+                allyButtonBase = new MiAnimatingComponent(game, x, y, width, height);
+                enemyButtonBase = new MiAnimatingComponent(game, x, y, width, height);
+                neutralButtonBase = new MiAnimatingComponent(game, x, y, width, height);
                 this.location = location;
             }
 
@@ -76,10 +76,10 @@ namespace Laikas_Key
                 //
                 // Create UI for Locations
                 //
-                LocationUI test_1 = new LocationUI(game, 100, 100, Locations.TEST_1);
-                LocationUI test_2 = new LocationUI(game, 100, 400, Locations.TEST_2);
-                LocationUI test_3 = new LocationUI(game, 400, 100, Locations.TEST_3);
-                LocationUI test_4 = new LocationUI(game, 400, 400, Locations.TEST_4);
+                LocationUI test_1 = new LocationUI(game, 100, 100, 100, 75, Locations.TEST_1);
+                LocationUI test_2 = new LocationUI(game, 100, 400, 100, 75, Locations.TEST_2);
+                LocationUI test_3 = new LocationUI(game, 400, 100, 100, 75, Locations.TEST_3);
+                LocationUI test_4 = new LocationUI(game, 400, 400, 100, 75, Locations.TEST_4);
 
                 //
                 // Add Neighbors
@@ -113,7 +113,7 @@ namespace Laikas_Key
                 //
                 // Cursor
                 //
-                cursor = new MiAnimatingComponent(game, activeLocation.ButtonBase.Position.X, activeLocation.ButtonBase.Position.Y);
+                cursor = new MiAnimatingComponent(game, activeLocation.ButtonBase.Position.X, activeLocation.ButtonBase.Position.Y, 100, 75);
 
                 //
                 // Responses to Input
@@ -149,7 +149,7 @@ namespace Laikas_Key
             foreach (LocationUI locationUI in allLocations)
             {
                 locationUI.ButtonBase.Draw(gameTime);
-                Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), locationUI.Label, locationUI.ButtonBase.Position + new Vector2(0, 20), Color.White);
+                Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), locationUI.Label, new Vector2(locationUI.ButtonBase.Position.X, locationUI.ButtonBase.Position.Y + 20), Color.White);
             }
             cursor.Draw(gameTime);
         }

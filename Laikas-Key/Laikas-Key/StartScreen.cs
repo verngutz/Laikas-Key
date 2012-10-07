@@ -35,7 +35,7 @@ namespace Laikas_Key
                         Game.PushScreen(WorldScreen.Instance);
                         return null;
                     });
-                newGameButtonBase = new MiAnimatingComponent(game, 100, 300);
+                newGameButtonBase = new MiAnimatingComponent(game, 100, 300, 100, 75);
 
                 //
                 // Quit Game Button
@@ -47,12 +47,12 @@ namespace Laikas_Key
                         Game.Exit();
                         return null;
                     });
-                quitGameButtonBase = new MiAnimatingComponent(game, 100, 400);
+                quitGameButtonBase = new MiAnimatingComponent(game, 100, 400, 100, 75);
 
                 //
                 // Cursor
                 //
-                cursor = new MiAnimatingComponent(game, 100, 300);
+                cursor = new MiAnimatingComponent(game, 100, 300, 100, 75);
 
                 //
                 // Default Active Button

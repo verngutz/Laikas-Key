@@ -2,6 +2,7 @@
 
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace MiUtil
 {
@@ -20,7 +21,8 @@ namespace MiUtil
 
         public Curve XPositionOverTime { get; set; }
         public Curve YPositionOverTime { get; set; }
-        public Curve ScalingOverTime { get; set; }
+        public Curve WidthOverTime { get; set; }
+        public Curve HeightOverTime { get; set; }
         public Curve RotationOverTime { get; set; }
         public Curve OriginXOverTime { get; set; }
         public Curve OriginYOverTime { get; set; }
@@ -47,15 +49,17 @@ namespace MiUtil
         private ulong alphaChangeTimer;
         public ulong AlphaChangeTimer { get { return alphaChangeTimer; } }
 
-        private Vector2 position;
-        public Vector2 Position
+        private Rectangle boundingRectangle;
+        public Point Position
         {
-            get { return position; }
-            set { position = value; }
+            get { return boundingRectangle.Location; }
+            set { boundingRectangle.Location = value; }
         }
 
+        public int Width { get { return boundingRectangle.Width; } }
+        public int Height { get { return boundingRectangle.Height; } }
+
         private Vector2 origin;
-        private float scale;
         private float rotation;
 
         private Color color;
@@ -65,14 +69,12 @@ namespace MiUtil
             set { color = value; }
         }
 
-        public MiAnimatingComponent(MiGame game) : this(game, 0, 0, 1, 0, 0, 0) { }
+        public MiAnimatingComponent(MiGame game, int init_x, int init_y, int width, int height) : this(game, init_x, init_y, width, height, 0, 0, 0) { }
 
-        public MiAnimatingComponent(MiGame game, float init_x, float init_y) : this(game, init_x, init_y, 1, 0, 0, 0) { }
+        public MiAnimatingComponent(MiGame game, int init_x, int init_y, int width, int height, float init_rotate, float origin_x, float origin_y)
+            : this(game, init_x, init_y, width, height, init_rotate, origin_x, origin_y, 255) { }
 
-        public MiAnimatingComponent(MiGame game, float init_x, float init_y, float init_scale, float init_rotate, float origin_x, float origin_y)
-            : this(game, init_x, init_y, init_scale, init_rotate, origin_x, origin_y, 255) { }
-
-        public MiAnimatingComponent(MiGame game, float init_x, float init_y, float init_scale, float init_rotate, float origin_x, float origin_y, byte alpha)
+        public MiAnimatingComponent(MiGame game, int init_x, int init_y, int width, int height, float init_rotate, float origin_x, float origin_y, byte alpha)
             : base(game)
         {
             spriteQueue = new Queue<KeyValuePair<Texture2D, int>>();
@@ -80,8 +82,7 @@ namespace MiUtil
 
             moveTimer = 0;
 
-            position = new Vector2(init_x, init_y);
-            scale = init_scale;
+            boundingRectangle = new Rectangle(init_x, init_y, width, height);
             rotation = init_rotate;
             origin = new Vector2(origin_x, origin_y);
 
@@ -91,8 +92,11 @@ namespace MiUtil
             YPositionOverTime = new Curve();
             YPositionOverTime.Keys.Add(new CurveKey(0, init_y));
 
-            ScalingOverTime = new Curve();
-            ScalingOverTime.Keys.Add(new CurveKey(0, init_scale));
+            WidthOverTime = new Curve();
+            WidthOverTime.Keys.Add(new CurveKey(0, width));
+
+            HeightOverTime = new Curve();
+            HeightOverTime.Keys.Add(new CurveKey(0, height));
 
             RotationOverTime = new Curve();
             RotationOverTime.Keys.Add(new CurveKey(0, init_rotate));
@@ -124,14 +128,15 @@ namespace MiUtil
             if (MoveEnabled)
             {
                 moveTimer++;
-                position.X = XPositionOverTime.Evaluate(MoveTimer);
-                position.Y = YPositionOverTime.Evaluate(MoveTimer);
+                boundingRectangle.X = (int)XPositionOverTime.Evaluate(MoveTimer);
+                boundingRectangle.Y = (int)YPositionOverTime.Evaluate(MoveTimer);
             }
 
             if (ScaleEnabled)
             {
                 scaleTimer++;
-                scale = ScalingOverTime.Evaluate(ScaleTimer);
+                boundingRectangle.Width = (int)WidthOverTime.Evaluate(MoveTimer);
+                boundingRectangle.Height = (int)HeightOverTime.Evaluate(MoveTimer);
             }
 
             if (RotateEnabled)
@@ -168,7 +173,7 @@ namespace MiUtil
 
         public override void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(spriteQueue.Peek().Key, position, null, Color, rotation, origin, scale, SpriteEffects.None, 0);
+            Game.SpriteBatch.Draw(spriteQueue.Peek().Key, boundingRectangle, null, Color, rotation, origin, SpriteEffects.None, 0);
         }
     }
 }
