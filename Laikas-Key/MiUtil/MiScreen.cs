@@ -6,6 +6,9 @@ namespace MiUtil
 {
     public abstract class MiScreen : MiDrawableComponent
     {
+        private static readonly MiScript DO_NOTHING = new MiScript(DoNothing);
+        protected Dictionary<MiControl, MiScript> inputResponses;
+
         public MiButton ActiveButton { get; set; }
 
         protected bool exitSequenceMutex;
@@ -16,16 +19,22 @@ namespace MiUtil
         {
             Enabled = false;
             Visible = false;
+            inputResponses = new Dictionary<MiControl, MiScript>();
         }
 
-        public virtual IEnumerator<ulong> EntrySequence() { yield return 0; }
+        public virtual IEnumerator<ulong> EntrySequence() { yield break; }
 
-        public virtual IEnumerator<ulong> Upped() { yield return 0; }
-        public virtual IEnumerator<ulong> Downed() { yield return 0; }
-        public virtual IEnumerator<ulong> Lefted() { yield return 0; }
-        public virtual IEnumerator<ulong> Righted() { yield return 0; }
-        public virtual IEnumerator<ulong> Pressed() { yield return 0; }
-        public virtual IEnumerator<ulong> Cancelled() { yield return 0; }
-        public virtual IEnumerator<ulong> Escaped() { yield return 0; }
+        public MiScript RespondToInput(MiControl control)
+        {
+            if (inputResponses.ContainsKey(control))
+                return inputResponses[control];
+            else
+                return DO_NOTHING;
+        }
+
+        private static IEnumerator<ulong> DoNothing()
+        {
+            yield break;
+        }
     }
 }

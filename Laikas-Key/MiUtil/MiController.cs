@@ -8,7 +8,7 @@ namespace MiUtil
 {
     public abstract class MiController<T> where T : MiControllerState, new()
     {
-        protected static T controllerState = new T();
+        protected static T controllerState;
         public static T GetState() { throw new NotImplementedException();  }
     }
 }

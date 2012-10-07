@@ -9,48 +9,43 @@ namespace Laikas_Key
 {
     class InputHandler : MiInputHandler
     {
+        private const int HOLD_REPEAT_INTERVAL = 30;
+        private Dictionary<MiControl, int> holdTimer;
         public InputHandler(MiGame game)
             : base(game)
         {
             oldState = Controller.GetState();
+            holdTimer = new Dictionary<MiControl, int>();
+            foreach (MiControl control in Controller.controls)
+            {
+                holdTimer[control] = 0;
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
             MiStandardControllerState newState = Controller.GetState();
-            if (oldState.IsReleased(Controller.UP) && newState.IsPressed(Controller.UP))
+            foreach (MiControl control in Controller.controls)
             {
-                Game.ScriptEngine.ExecuteScript(Focused.Upped);
-            }
+                if (oldState.IsReleased(control) && newState.IsPressed(control))
+                {
+                    Game.ScriptEngine.ExecuteScript(Focused.RespondToInput(control));
+                }
 
-            if (oldState.IsReleased(Controller.DOWN) && newState.IsPressed(Controller.DOWN))
-            {
-                Game.ScriptEngine.ExecuteScript(Focused.Downed);
-            }
+                if (oldState.IsPressed(control) && newState.IsPressed(control))
+                {
+                    holdTimer[control]++;
+                    if (holdTimer[control] > HOLD_REPEAT_INTERVAL)
+                    {
+                        holdTimer[control] = 0;
+                        Game.ScriptEngine.ExecuteScript(Focused.RespondToInput(control));
+                    }
+                }
 
-            if (oldState.IsReleased(Controller.LEFT) && newState.IsPressed(Controller.LEFT))
-            {
-                Game.ScriptEngine.ExecuteScript(Focused.Lefted);
-            }
-
-            if (oldState.IsReleased(Controller.RIGHT) && newState.IsPressed(Controller.RIGHT))
-            {
-                Game.ScriptEngine.ExecuteScript(Focused.Righted);
-            }
-
-            if (oldState.IsReleased(Controller.A) && newState.IsPressed(Controller.A))
-            {
-                Game.ScriptEngine.ExecuteScript(Focused.Pressed);
-            }
-
-            if (oldState.IsReleased(Controller.B) && newState.IsPressed(Controller.B))
-            {
-                Game.ScriptEngine.ExecuteScript(Focused.Cancelled);
-            }
-
-            if (oldState.IsReleased(Controller.START) && newState.IsPressed(Controller.START))
-            {
-                Game.ScriptEngine.ExecuteScript(Focused.Escaped);
+                if (newState.IsReleased(control))
+                {
+                    holdTimer[control] = 0;
+                }
             }
 
             oldState = newState;

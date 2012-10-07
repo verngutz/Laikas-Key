@@ -113,6 +113,14 @@ namespace Laikas_Key
                 // Cursor
                 //
                 cursor = new MiAnimatingComponent(game, activeLocation.ButtonBase.Position.X, activeLocation.ButtonBase.Position.Y);
+
+                //
+                // Responses to Input
+                //
+                inputResponses[Controller.UP] = new MiScript(Upped);
+                inputResponses[Controller.DOWN] = new MiScript(Downed);
+                inputResponses[Controller.LEFT] = new MiScript(Lefted);
+                inputResponses[Controller.RIGHT] = new MiScript(Righted);
             }
             else
             {
@@ -143,7 +151,7 @@ namespace Laikas_Key
             cursor.Draw(gameTime);
         }
 
-        public override IEnumerator<ulong> Upped()
+        public IEnumerator<ulong> Upped()
         {
             if (activeLocation.Neighbors.ContainsKey(Controller.UP))
             {
@@ -153,7 +161,7 @@ namespace Laikas_Key
             yield break;
         }
 
-        public override IEnumerator<ulong> Downed()
+        public IEnumerator<ulong> Downed()
         {
             if (activeLocation.Neighbors.ContainsKey(Controller.DOWN))
             {
@@ -163,7 +171,7 @@ namespace Laikas_Key
             yield break;
         }
 
-        public override IEnumerator<ulong> Lefted()
+        public IEnumerator<ulong> Lefted()
         {
             if (activeLocation.Neighbors.ContainsKey(Controller.LEFT))
             {
@@ -173,7 +181,7 @@ namespace Laikas_Key
             yield break;
         }
 
-        public override IEnumerator<ulong> Righted()
+        public IEnumerator<ulong> Righted()
         {
             if (activeLocation.Neighbors.ContainsKey(Controller.RIGHT))
             {

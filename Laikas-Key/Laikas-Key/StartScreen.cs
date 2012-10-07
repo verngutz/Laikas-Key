@@ -56,7 +56,17 @@ namespace Laikas_Key
                 //
                 cursor = new MiAnimatingComponent(game, 100, 300);
 
+                //
+                // Default Active Button
+                //
                 ActiveButton = newGameButton;
+
+                //
+                // Reponses to Input
+                //
+                inputResponses[Controller.UP] = new MiScript(Upped);
+                inputResponses[Controller.DOWN] = new MiScript(Downed);
+                inputResponses[Controller.A] = new MiScript(Pressed);
             }
             else
             {
@@ -87,7 +97,7 @@ namespace Laikas_Key
             cursor.Draw(gameTime);
         }
 
-        public override IEnumerator<ulong> Upped()
+        private IEnumerator<ulong> Upped()
         {
             if (ActiveButton == quitGameButton)
             {
@@ -97,7 +107,7 @@ namespace Laikas_Key
             yield break;
         }
 
-        public override IEnumerator<ulong> Downed()
+        private IEnumerator<ulong> Downed()
         {
             if (ActiveButton == newGameButton)
             {
@@ -107,7 +117,7 @@ namespace Laikas_Key
             yield break;
         }
 
-        public override IEnumerator<ulong> Pressed()
+        public IEnumerator<ulong> Pressed()
         {
             ActiveButton.Pressed();
             yield break;

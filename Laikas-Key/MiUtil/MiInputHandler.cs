@@ -1,6 +1,7 @@
-﻿namespace MiUtil
+﻿using System.Collections.Generic;
+namespace MiUtil
 {
-    public class MiInputHandler : MiComponent
+    public abstract class MiInputHandler : MiComponent
     {
         protected MiControllerState oldState;
         public MiScreen Focused;

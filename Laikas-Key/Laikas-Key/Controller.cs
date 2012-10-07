@@ -17,6 +17,8 @@ namespace Laikas_Key
         public static MiControl A = new MiControl();
         public static MiControl B = new MiControl();
         public static MiControl START = new MiControl();
+
+        public static readonly MiControl[] controls = { LEFT, RIGHT, UP, DOWN, A, B, START };
         
         new public static MiStandardControllerState GetState()
         {
