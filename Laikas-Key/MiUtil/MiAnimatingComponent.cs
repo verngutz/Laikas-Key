@@ -14,10 +14,12 @@ namespace MiUtil
     /// </summary>
     public class MiAnimatingComponent : MiDrawableComponent
     {
-        protected Queue<KeyValuePair<Texture2D, int>> spriteQueue;
+        private enum SpriteStates { DEFAULT };
+        protected Dictionary<Enum, Queue<KeyValuePair<Texture2D, int>>> spriteQueue;
         private int spriteQueueTimer;
         public bool SpriteQueueLoop { get; set; }
         public bool SpriteQueueEnabled { get; set; }
+        public Enum SpriteState { get; set; }
 
         public Curve XPositionOverTime { get; set; }
         public Curve YPositionOverTime { get; set; }
@@ -77,8 +79,9 @@ namespace MiUtil
         public MiAnimatingComponent(MiGame game, int init_x, int init_y, int width, int height, float init_rotate, float origin_x, float origin_y, byte alpha)
             : base(game)
         {
-            spriteQueue = new Queue<KeyValuePair<Texture2D, int>>();
+            spriteQueue = new Dictionary<Enum, Queue<KeyValuePair<Texture2D, int>>>();
             spriteQueueTimer = 0;
+            SpriteState = SpriteStates.DEFAULT;
 
             moveTimer = 0;
 
@@ -117,10 +120,16 @@ namespace MiUtil
         /// Add a texture to this animation sequence.
         /// </summary>
         /// <param name="texture">The texture that will be drawn</param>
+        /// <param name="spriteState">The state of the sprite when the texture will be shown</param>
         /// <param name="time">The number of frames the texture will be drawn</param>
-        public virtual void AddTexture(Texture2D texture, int time)
+        public virtual void AddTexture(Texture2D texture, Enum spriteState, int time)
         {
-            spriteQueue.Enqueue(new KeyValuePair<Texture2D, int>(texture, time));
+            spriteQueue[spriteState].Enqueue(new KeyValuePair<Texture2D, int>(texture, time));
+        }
+
+        public void AddTexture(Texture2D texture, int time)
+        {
+            AddTexture(texture, SpriteStates.DEFAULT, time);
         }
 
         public override void Update(GameTime gameTime)
@@ -160,20 +169,20 @@ namespace MiUtil
 
             if (SpriteQueueEnabled)
             {
-                if (spriteQueueTimer++ > spriteQueue.Peek().Value)
+                if (spriteQueueTimer++ > spriteQueue[SpriteState].Peek().Value)
                 {
                     spriteQueueTimer = 0;
                     if (SpriteQueueLoop)
-                        spriteQueue.Enqueue(spriteQueue.Dequeue());
+                        spriteQueue[SpriteState].Enqueue(spriteQueue[SpriteState].Dequeue());
                     else if (spriteQueue.Count > 1)
-                        spriteQueue.Dequeue();
+                        spriteQueue[SpriteState].Dequeue();
                 }
             }
         }
 
         public override void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(spriteQueue.Peek().Key, boundingRectangle, null, Color, rotation, origin, SpriteEffects.None, 0);
+            Game.SpriteBatch.Draw(spriteQueue[SpriteState].Peek().Key, boundingRectangle, null, Color, rotation, origin, SpriteEffects.None, 0);
         }
     }
 }
