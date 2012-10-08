@@ -25,7 +25,7 @@ namespace Laikas_Key
 
         private bool playerMoveMutex;
 
-        public TownScreen(MiGame game)
+        public TownScreen(MiGame game, MiTileEngine tileEngine)
             : base(game)
         {
             //
@@ -39,13 +39,7 @@ namespace Laikas_Key
             playerFrontY = 2;
             playerMoveMutex = false;
 
-            //
-            // Town Map
-            //
-            tileEngine = new MiTileEngine(game, 50, 50);
-            tileEngine.AddTileType('g', "Grass", true);
-            tileEngine.AddTileType('r', "Road", false);
-            tileEngine.AddTileType('t', "Treasure", false);
+            this.tileEngine = tileEngine;
 
             inputResponses[Controller.START] = new MiScript(Escape);
             inputResponses[Controller.UP] = new MiScript(MoveUp);
@@ -55,13 +49,8 @@ namespace Laikas_Key
             inputResponses[Controller.A] = new MiScript(ExamineFront);
         }
 
-        public override void LoadContent()
+        public void LoadMap()
         {
-            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoUp"), AvatarDirection.UP, 0);
-            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoDown"), AvatarDirection.DOWN, 0);
-            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoLeft"), AvatarDirection.LEFT, 0);
-            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoRight"), AvatarDirection.RIGHT, 0);
-            tileEngine.LoadContent();
             tileEngine.LoadMap(
                 new char[,]
                 {
@@ -75,6 +64,14 @@ namespace Laikas_Key
                 },
                 playerAvatar.Position.X - playerX * playerAvatar.Width, playerAvatar.Position.Y - playerY * playerAvatar.Height
             );
+        }
+
+        public override void LoadContent()
+        {
+            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoUp"), AvatarDirection.UP, 0);
+            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoDown"), AvatarDirection.DOWN, 0);
+            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoLeft"), AvatarDirection.LEFT, 0);
+            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoRight"), AvatarDirection.RIGHT, 0);
         }
 
         public override void Update(GameTime gameTime)

@@ -63,9 +63,6 @@ namespace Laikas_Key
         private LocationUI activeLocation;
         private List<LocationUI> allLocations;
 
-        private TownScreen townScreen;
-        private BattleScreen battleScreen;
-
         private MiAnimatingComponent cursor;
 
         public WorldScreen(MiGame game)
@@ -80,6 +77,8 @@ namespace Laikas_Key
                 LocationUI test_2 = new LocationUI(game, 100, 400, 100, 75, Locations.TEST_2);
                 LocationUI test_3 = new LocationUI(game, 400, 100, 100, 75, Locations.TEST_3);
                 LocationUI test_4 = new LocationUI(game, 400, 400, 100, 75, Locations.TEST_4);
+
+                Locations.TEST_1.ControllingFaction = Location.State.ENEMY;
 
                 //
                 // Add Neighbors
@@ -200,9 +199,11 @@ namespace Laikas_Key
             switch (activeLocation.ControllingFaction)
             {
                 case Location.State.ALLY:
+                    TownScreen.Instance.LoadMap();
                     Game.PushScreen(TownScreen.Instance);
                     break;
                 case Location.State.ENEMY:
+                    BattleScreen.Instance.LoadMap();
                     Game.PushScreen(BattleScreen.Instance);
                     break;
             }

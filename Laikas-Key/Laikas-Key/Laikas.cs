@@ -17,6 +17,8 @@ namespace Laikas_Key
     /// </summary>
     public class Laikas : MiGame
     {
+        private MiTileEngine tileEngine;
+
         protected override void Initialize()
         {
             // Set the game resolution
@@ -29,8 +31,14 @@ namespace Laikas_Key
             // Initialize screens
             StartScreen.Instance = new StartScreen(this);
             WorldScreen.Instance = new WorldScreen(this);
-            TownScreen.Instance = new TownScreen(this);
-            BattleScreen.Instance = new BattleScreen(this);
+            TownScreen.Instance = new TownScreen(this, tileEngine);
+            BattleScreen.Instance = new BattleScreen(this, tileEngine);
+
+            // Tile Engine
+            tileEngine = new MiTileEngine(this, 50, 50);
+            tileEngine.AddTileType('g', "Grass", true);
+            tileEngine.AddTileType('r', "Road", false);
+            tileEngine.AddTileType('t', "Treasure", false);
 
             // Set active screen
             PushScreen(StartScreen.Instance);
@@ -41,6 +49,7 @@ namespace Laikas_Key
 
         protected override void LoadContent()
         {
+            tileEngine.LoadContent();
             StartScreen.Instance.LoadContent();
             WorldScreen.Instance.LoadContent();
             TownScreen.Instance.LoadContent();
