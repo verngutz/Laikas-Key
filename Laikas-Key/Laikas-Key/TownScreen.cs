@@ -33,12 +33,12 @@ namespace Laikas_Key
                 //
                 // Player Avatar
                 //
-                playerAvatar = new MiAnimatingComponent(game, 375, 275, 50, 50);
-                playerAvatar.SpriteState = AvatarDirection.DOWN;
                 playerX = 1;
                 playerY = 1;
                 playerFrontX = 1;
                 playerFrontY = 2;
+                playerAvatar = new MiAnimatingComponent(Game, 0, 0, tileEngine.TileWidth, tileEngine.TileHeight);
+                playerAvatar.SpriteState = AvatarDirection.DOWN;
                 playerMoveMutex = false;
 
                 this.tileEngine = tileEngine;
@@ -69,8 +69,11 @@ namespace Laikas_Key
                     {'r', 'g', 'r', 'g', 'g', 'g', 'r'},
                     {'r', 'r', 'r', 'r', 'r', 'r', 'r'}
                 },
-                playerAvatar.Position.X - playerX * playerAvatar.Width, playerAvatar.Position.Y - playerY * playerAvatar.Height
+                MiResolution.VirtualWidth / 2 - playerAvatar.Width / 2 - playerX * playerAvatar.Width, 
+                MiResolution.VirtualHeight / 2 - playerAvatar.Height / 2 - playerY * playerAvatar.Height
             );
+
+            playerAvatar.BoundingRectangle = tileEngine.BoundingRectangle(playerX, playerY);
         }
 
         public override void LoadContent()

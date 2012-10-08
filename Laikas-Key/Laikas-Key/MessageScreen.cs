@@ -22,7 +22,7 @@ namespace Laikas_Key
         {
             if (Instance == null)
             {
-                background = new MiAnimatingComponent(game, 0, 400, 800, 200, 0, 0, 0, 0);
+                background = new MiAnimatingComponent(game, 0, 400, MiResolution.VirtualWidth, MiResolution.VirtualHeight - 400, 0, 0, 0, 0);
                 inputResponses[Controller.A] = new MiScript(ExitSequence);
             }
             else
@@ -44,7 +44,7 @@ namespace Laikas_Key
         public override void Draw(GameTime gameTime)
         {
             background.Draw(gameTime);
-            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), message, new Vector2(0, 450), background.Color);
+            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), message, new Vector2(0, background.Position.Y + 50), background.Color);
         }
 
         public override IEnumerator<ulong> EntrySequence()

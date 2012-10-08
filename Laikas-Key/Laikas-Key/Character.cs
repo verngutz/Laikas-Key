@@ -29,9 +29,13 @@ namespace Laikas_Key
 
         private List<Attack> knownAttacks;
         public List<Attack> KnownAttacks { get { return knownAttacks; } }
+
+        private string name;
+        public string Name { get { return name; } }
         
-        public Character(int speed, int will, int mind, int power, int vitality)
+        public Character(string name, int speed, int will, int mind, int power, int vitality)
         {
+            this.name = name;
             this.speed = speed;
             this.will = will;
             this.mind = mind;

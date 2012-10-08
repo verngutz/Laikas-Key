@@ -22,15 +22,15 @@ namespace Laikas_Key
         protected override void Initialize()
         {
             // Set the game resolution
-            MiResolution.SetVirtualResolution(800, 600);
-            MiResolution.SetResolution(800, 600, false);
+            MiResolution.SetVirtualResolution(900, 600);
+            MiResolution.SetResolution(900, 600, false);
 
             // Initialize Input Handler
             inputHandler = new InputHandler(this);
 
             // Initialize Tile Engine
-            tileEngine = new MiTileEngine(this, 50, 50);
-            tileEngine.AddTileType('g', "Grass", true);
+            tileEngine = new MiTileEngine(this, 75, 75);
+            tileEngine.AddTileType('g', "Passable", true);
             tileEngine.AddTileType('r', "Road", false);
             tileEngine.AddTileType('t', "Treasure", false);
 

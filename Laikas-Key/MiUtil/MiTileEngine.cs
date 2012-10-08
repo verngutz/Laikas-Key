@@ -35,6 +35,9 @@ namespace MiUtil
         private int tileHeight;
         public int TileHeight { get { return tileHeight; } }
 
+        private int xOffset;
+        private int yOffset;
+
         private Dictionary<char, MiTileType> tiles;
 
         private MiAnimatingComponent[,] mapGraphics;
@@ -69,6 +72,13 @@ namespace MiUtil
                     mapPassability[row, col] = tiles[charmap[row, col]].Passable;
                 }
             }
+            xOffset = init_dx;
+            yOffset = init_dy;
+        }
+
+        public Rectangle BoundingRectangle(int x, int y)
+        {
+            return new Rectangle(x * tileWidth + xOffset, y * tileHeight + yOffset, tileWidth, tileHeight);
         }
 
         public override void LoadContent()

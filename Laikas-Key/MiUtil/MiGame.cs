@@ -16,6 +16,8 @@ namespace MiUtil
         private LinkedList<MiScreen> toDraw;
         private Stack<MiScreen> toUpdate;
 
+        private Queue<MiScreen> pending;
+
         protected MiInputHandler inputHandler;
         public MiInputHandler InputHandler { get { return inputHandler; } }
 
@@ -38,6 +40,8 @@ namespace MiUtil
 
             toDraw = new LinkedList<MiScreen>();
             toUpdate = new Stack<MiScreen>();
+
+            pending = new Queue<MiScreen>();
 
             scriptEngine = new MiScriptEngine(this);
         }
@@ -64,6 +68,14 @@ namespace MiUtil
         protected override void Update(GameTime gameTime)
         {
             scriptEngine.Update(gameTime);
+
+            foreach (MiScreen screen in pending)
+            {
+                toUpdate.Push(screen);
+                toDraw.AddLast(screen);
+            }
+
+            pending.Clear();
 
             inputHandler.Focused = toUpdate.Peek();
             inputHandler.Update(gameTime);
@@ -105,8 +117,7 @@ namespace MiUtil
 
         public void PushScreen(MiScreen screen)
         {
-            toUpdate.Push(screen);
-            toDraw.AddLast(screen);
+            pending.Enqueue(screen);
         }
 
         public void PopScreen()

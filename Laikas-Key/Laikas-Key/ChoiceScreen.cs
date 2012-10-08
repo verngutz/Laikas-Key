@@ -28,7 +28,7 @@ namespace Laikas_Key
             {
                 choices = new KeyValuePair<string, MiScript>[0];
                 activeChoice = 0;
-                background = new MiAnimatingComponent(game, 0, 400, 800, 200, 0, 0, 0, 0);
+                background = new MiAnimatingComponent(game, 0, 400, MiResolution.VirtualWidth, MiResolution.VirtualHeight - 400, 0, 0, 0, 0);
                 cursor = new MiAnimatingComponent(game, 0, 0, 50, 20);
                 inputResponses[Controller.A] = new MiScript(Pressed);
                 inputResponses[Controller.UP] = new MiScript(Upped);
@@ -55,8 +55,8 @@ namespace Laikas_Key
         public override void Draw(GameTime gameTime)
         {
             background.Draw(gameTime);
-            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), message, new Vector2(0, 450), background.Color);
-            int y = 450;
+            int y = background.Position.Y + 50;
+            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), message, new Vector2(0, y), background.Color);
             foreach (KeyValuePair<string, MiScript> choice in choices)
             {
                 y += 30;

@@ -52,6 +52,11 @@ namespace MiUtil
         public ulong AlphaChangeTimer { get { return alphaChangeTimer; } }
 
         private Rectangle boundingRectangle;
+        public Rectangle BoundingRectangle
+        {
+            get { return boundingRectangle; }
+            set { boundingRectangle = value; }
+        }
         public Point Position
         {
             get { return boundingRectangle.Location; }
