@@ -11,5 +11,6 @@ namespace Laikas_Key
         public static Location TEST_2 = new Location("test_2");
         public static Location TEST_3 = new Location("test_3");
         public static Location TEST_4 = new Location("test_4");
+        public static Location TEST_5 = new Location("test_5");
     }
 }
