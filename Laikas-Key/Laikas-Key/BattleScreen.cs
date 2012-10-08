@@ -58,7 +58,7 @@ namespace Laikas_Key
         {
             DialogScreen.Instance.Message = "Setup Phase";
             Game.PushScreen(DialogScreen.Instance);
-            yield return 0;
+            return DialogScreen.Instance.EntrySequence();
         }
 
         public IEnumerator<ulong> Escape()

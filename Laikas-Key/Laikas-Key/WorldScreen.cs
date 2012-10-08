@@ -216,6 +216,7 @@ namespace Laikas_Key
                 case Location.State.ENEMY:
                     BattleScreen.Instance.LoadMap();
                     Game.PushScreen(BattleScreen.Instance);
+                    Game.ScriptEngine.ExecuteScript(new MiScript(BattleScreen.Instance.EntrySequence));
                     break;
             }
             yield break;

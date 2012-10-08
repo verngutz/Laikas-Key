@@ -219,8 +219,9 @@ namespace Laikas_Key
             {
                 DialogScreen.Instance.Message = "It FUCKING works!";
                 Game.PushScreen(DialogScreen.Instance);
+                return DialogScreen.Instance.EntrySequence();
             }
-            yield break;
+            return null;
         }
     }
 }
