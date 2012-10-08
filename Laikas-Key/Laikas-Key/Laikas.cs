@@ -28,17 +28,17 @@ namespace Laikas_Key
             // Initialize Input Handler
             inputHandler = new InputHandler(this);
 
+            // Initialize Tile Engine
+            tileEngine = new MiTileEngine(this, 50, 50);
+            tileEngine.AddTileType('g', "Grass", true);
+            tileEngine.AddTileType('r', "Road", false);
+            tileEngine.AddTileType('t', "Treasure", false);
+
             // Initialize screens
             StartScreen.Instance = new StartScreen(this);
             WorldScreen.Instance = new WorldScreen(this);
             TownScreen.Instance = new TownScreen(this, tileEngine);
             BattleScreen.Instance = new BattleScreen(this, tileEngine);
-
-            // Tile Engine
-            tileEngine = new MiTileEngine(this, 50, 50);
-            tileEngine.AddTileType('g', "Grass", true);
-            tileEngine.AddTileType('r', "Road", false);
-            tileEngine.AddTileType('t', "Treasure", false);
 
             // Set active screen
             PushScreen(StartScreen.Instance);

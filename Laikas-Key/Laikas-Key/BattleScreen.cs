@@ -15,8 +15,15 @@ namespace Laikas_Key
         public BattleScreen(MiGame game, MiTileEngine tileEngine)
             : base(game)
         {
-            this.tileEngine = tileEngine;
-            inputResponses[Controller.START] = new MiScript(Escape);
+            if (Instance == null)
+            {
+                this.tileEngine = tileEngine;
+                inputResponses[Controller.START] = new MiScript(Escape);
+            }
+            else
+            {
+                throw new Exception("Battle Screen Already Initialized");
+            }
         }
 
         public void LoadMap()

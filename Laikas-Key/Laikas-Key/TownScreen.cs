@@ -28,25 +28,32 @@ namespace Laikas_Key
         public TownScreen(MiGame game, MiTileEngine tileEngine)
             : base(game)
         {
-            //
-            // Player Avatar
-            //
-            playerAvatar = new MiAnimatingComponent(game, 375, 275, 50, 50);
-            playerAvatar.SpriteState = AvatarDirection.DOWN;
-            playerX = 1;
-            playerY = 1;
-            playerFrontX = 1;
-            playerFrontY = 2;
-            playerMoveMutex = false;
+            if (Instance == null)
+            {
+                //
+                // Player Avatar
+                //
+                playerAvatar = new MiAnimatingComponent(game, 375, 275, 50, 50);
+                playerAvatar.SpriteState = AvatarDirection.DOWN;
+                playerX = 1;
+                playerY = 1;
+                playerFrontX = 1;
+                playerFrontY = 2;
+                playerMoveMutex = false;
 
-            this.tileEngine = tileEngine;
+                this.tileEngine = tileEngine;
 
-            inputResponses[Controller.START] = new MiScript(Escape);
-            inputResponses[Controller.UP] = new MiScript(MoveUp);
-            inputResponses[Controller.DOWN] = new MiScript(MoveDown);
-            inputResponses[Controller.LEFT] = new MiScript(MoveLeft);
-            inputResponses[Controller.RIGHT] = new MiScript(MoveRight);
-            inputResponses[Controller.A] = new MiScript(ExamineFront);
+                inputResponses[Controller.START] = new MiScript(Escape);
+                inputResponses[Controller.UP] = new MiScript(MoveUp);
+                inputResponses[Controller.DOWN] = new MiScript(MoveDown);
+                inputResponses[Controller.LEFT] = new MiScript(MoveLeft);
+                inputResponses[Controller.RIGHT] = new MiScript(MoveRight);
+                inputResponses[Controller.A] = new MiScript(ExamineFront);
+            }
+            else
+            {
+                throw new Exception("Town Screen Already Initialized"); 
+            }
         }
 
         public void LoadMap()
