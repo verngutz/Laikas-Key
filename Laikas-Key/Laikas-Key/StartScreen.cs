@@ -88,8 +88,6 @@ namespace Laikas_Key
 
         public override void Draw(GameTime gameTime)
         {
-            Game.GraphicsDevice.Clear(Color.Black);
-
             newGameButtonBase.Draw(gameTime);
             quitGameButtonBase.Draw(gameTime);
             cursor.Draw(gameTime);

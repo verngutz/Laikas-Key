@@ -23,6 +23,7 @@ namespace MiUtil
         }
 
         public virtual IEnumerator<ulong> EntrySequence() { yield break; }
+        public virtual IEnumerator<ulong> ExitSequence() { yield break; }
 
         public MiScript RespondToInput(MiControl control)
         {

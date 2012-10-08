@@ -107,10 +107,12 @@ namespace MiUtil
         {
             toUpdate.Push(screen);
             toDraw.AddLast(screen);
+            ScriptEngine.ExecuteScript(new MiScript(screen.EntrySequence));
         }
 
         public void PopScreen()
         {
+            ScriptEngine.ExecuteScript(new MiScript(toUpdate.Peek().ExitSequence));
             toUpdate.Pop();
             toDraw.RemoveLast();
         }

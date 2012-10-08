@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MiUtil;
+using Microsoft.Xna.Framework;
 
 namespace Laikas_Key
 {
@@ -31,16 +32,33 @@ namespace Laikas_Key
             tileEngine.LoadMap(
                 new char[,]
                 {
-                    {'r', 'r', 'r', 'r', 'r', 'r', 'r'},
-                    {'r', 'g', 'g', 'g', 'g', 'g', 'r'},
-                    {'r', 'g', 'r', 'r', 'r', 'g', 'r'},
-                    {'r', 'g', 'r', 't', 'r', 'g', 'r'},
-                    {'r', 'g', 'r', 'g', 'r', 'g', 'r'},
-                    {'r', 'g', 'r', 'g', 'g', 'g', 'r'},
-                    {'r', 'r', 'r', 'r', 'r', 'r', 'r'}
+                    {'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+                    {'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g'},
+                    {'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g'},
+                    {'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g'},
+                    {'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'r', 'r', 'g', 'g'},
+                    {'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'r', 'g', 'g'},
+                    {'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'r', 'g', 'g'},
+                    {'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'r', 'g', 'g'},
+                    {'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'r', 'r', 'g', 'g'},
+                    {'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g'},
+                    {'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+                    {'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
                 },
                 0, 0
             );
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            tileEngine.Draw(gameTime);
+        }
+
+        public override IEnumerator<ulong> EntrySequence()
+        {
+            DialogScreen.Instance.Message = "Setup Phase";
+            Game.PushScreen(DialogScreen.Instance);
+            yield return 0;
         }
 
         public IEnumerator<ulong> Escape()

@@ -217,7 +217,8 @@ namespace Laikas_Key
         {
             if (playerFrontX == 3 && playerFrontY == 3)
             {
-                Game.PushScreen(new DialogScreen(Game, "It FUCKING works!"));
+                DialogScreen.Instance.Message = "It FUCKING works!";
+                Game.PushScreen(DialogScreen.Instance);
             }
             yield break;
         }
