@@ -39,7 +39,8 @@ namespace Laikas_Key
             WorldScreen.Instance = new WorldScreen(this);
             TownScreen.Instance = new TownScreen(this, tileEngine);
             BattleScreen.Instance = new BattleScreen(this, tileEngine);
-            DialogScreen.Instance = new DialogScreen(this);
+            MessageScreen.Instance = new MessageScreen(this);
+            ChoiceScreen.Instance = new ChoiceScreen(this);
 
             // Set active screen
             PushScreen(StartScreen.Instance);
@@ -55,7 +56,8 @@ namespace Laikas_Key
             WorldScreen.Instance.LoadContent();
             TownScreen.Instance.LoadContent();
             BattleScreen.Instance.LoadContent();
-            DialogScreen.Instance.LoadContent();
+            MessageScreen.Instance.LoadContent();
+            ChoiceScreen.Instance.LoadContent();
             base.LoadContent();
         }
     }

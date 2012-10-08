@@ -64,7 +64,7 @@ namespace Laikas_Key
                     {'r', 'r', 'r', 'r', 'r', 'r', 'r'},
                     {'r', 'g', 'g', 'g', 'g', 'g', 'r'},
                     {'r', 'g', 'r', 'r', 'r', 'g', 'r'},
-                    {'r', 'g', 'r', 't', 'r', 'g', 'r'},
+                    {'r', 'g', 'g', 't', 'r', 'g', 'r'},
                     {'r', 'g', 'r', 'g', 'r', 'g', 'r'},
                     {'r', 'g', 'r', 'g', 'g', 'g', 'r'},
                     {'r', 'r', 'r', 'r', 'r', 'r', 'r'}
@@ -217,9 +217,27 @@ namespace Laikas_Key
         {
             if (playerFrontX == 3 && playerFrontY == 3)
             {
-                DialogScreen.Instance.Message = "It FUCKING works!";
-                Game.PushScreen(DialogScreen.Instance);
-                return DialogScreen.Instance.EntrySequence();
+                ChoiceScreen.Instance.Message = "Choose your fate.";
+                ChoiceScreen.Instance.SetChoices(
+                    new KeyValuePair<string, MiScript>("Traditionalist", new MiScript(
+                        delegate 
+                        {
+                            Game.PopScreen();
+                            MessageScreen.Instance.Message = "Your FUCKING backwardness is preventing equality for all.";
+                            Game.PushScreen(MessageScreen.Instance);
+                            return MessageScreen.Instance.EntrySequence();
+                        })),
+                    new KeyValuePair<string, MiScript>("Futurist", new MiScript(
+                        delegate
+                        {
+                            Game.PopScreen();
+                            MessageScreen.Instance.Message = "Your FUCKING technology is destroying the earth.";
+                            Game.PushScreen(MessageScreen.Instance);
+                            return MessageScreen.Instance.EntrySequence();
+                        }))
+                );
+                Game.PushScreen(ChoiceScreen.Instance);
+                return ChoiceScreen.Instance.EntrySequence();
             }
             return null;
         }

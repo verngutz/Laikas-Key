@@ -11,6 +11,9 @@ namespace Laikas_Key
     {
         public static BattleScreen Instance { set; get; }
 
+        private enum BattleState { SETUP, CHARACTER_SELECT, CHARACTER_MOVE, ENEMY_TURN }
+        private BattleState state;
+
         private MiTileEngine tileEngine;
         private List<Character> enemies;
 
@@ -34,6 +37,8 @@ namespace Laikas_Key
                 Player.Party.Add(you);
                 Player.Party.Add(someGuy);
                 Player.Party.Add(someOtherGuy);
+
+                state = BattleState.SETUP;
             }
             else
             {
@@ -70,9 +75,9 @@ namespace Laikas_Key
 
         public override IEnumerator<ulong> EntrySequence()
         {
-            DialogScreen.Instance.Message = "Setup Phase";
-            Game.PushScreen(DialogScreen.Instance);
-            return DialogScreen.Instance.EntrySequence();
+            MessageScreen.Instance.Message = "Setup Phase";
+            Game.PushScreen(MessageScreen.Instance);
+            return MessageScreen.Instance.EntrySequence();
         }
 
         public IEnumerator<ulong> Escape()

@@ -8,16 +8,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Laikas_Key
 {
-    class DialogScreen : MiScreen
+    class MessageScreen : MiScreen
     {
-        public static DialogScreen Instance { get; set; }
+        public static MessageScreen Instance { get; set; }
 
         private string message;
         public string Message { set { message = value; } }
 
         private MiAnimatingComponent background;
 
-        public DialogScreen(MiGame game)
+        public MessageScreen(MiGame game)
             : base(game)
         {
             if (Instance == null)
