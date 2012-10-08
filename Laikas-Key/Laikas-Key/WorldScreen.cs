@@ -73,13 +73,13 @@ namespace Laikas_Key
                 //
                 // Create UI for Locations
                 //
-                LocationUI test_1 = new LocationUI(game, 350, 100, 100, 75, Locations.TEST_1);
-                LocationUI test_2 = new LocationUI(game, 150, 250, 100, 75, Locations.TEST_2);
-                LocationUI test_3 = new LocationUI(game, 550, 250, 100, 75, Locations.TEST_3);
-                LocationUI test_4 = new LocationUI(game, 350, 400, 100, 75, Locations.TEST_4);
-                LocationUI test_5 = new LocationUI(game, 350, 250, 100, 75, Locations.TEST_5);
+                LocationUI test_1 = new LocationUI(game, 350, 100, 100, 75, Location.TEST_1);
+                LocationUI test_2 = new LocationUI(game, 150, 250, 100, 75, Location.TEST_2);
+                LocationUI test_3 = new LocationUI(game, 550, 250, 100, 75, Location.TEST_3);
+                LocationUI test_4 = new LocationUI(game, 350, 400, 100, 75, Location.TEST_4);
+                LocationUI test_5 = new LocationUI(game, 350, 250, 100, 75, Location.TEST_5);
 
-                Locations.TEST_1.ControllingFaction = Location.State.ENEMY;
+                Location.TEST_1.ControllingFaction = Location.State.ENEMY;
 
                 //
                 // Add Neighbors

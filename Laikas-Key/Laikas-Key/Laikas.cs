@@ -15,7 +15,7 @@ namespace Laikas_Key
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Laikas : MiGame
+    class Laikas : MiGame
     {
         private MiTileEngine tileEngine;
 

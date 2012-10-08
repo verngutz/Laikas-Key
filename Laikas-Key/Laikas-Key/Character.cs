@@ -5,64 +5,46 @@ using System.Text;
 
 namespace Laikas_Key
 {
-    public class Character
+    class Character
     {
+        private int speed;
+        public int Speed { get { return speed; } }
+        public int MovementPoints { get { return speed; } }
+
+        private int will;
+        public int Will { get { return will; } }
+
+        private int mind;
+        public int Mind { get { return mind; } }
+
+        private int power;
+        public int Power { get { return power; } }
+
+        private int vitality;
+        public int Vitality { get { return vitality; } }
+        public int MaxHealth { get { return vitality; } }
+
+        private int currHealth;
+        public int CurrHealth { get { return currHealth; } }
+
+        private List<Attack> knownAttacks;
+        public List<Attack> KnownAttacks { get { return knownAttacks; } }
         
-        private int hp;
-        private int movement;
-        private int attack;
-        private int tradDamage;
-        private int futurDamage;
-        int traditionalist;
-        int futurist;
-        int damage;
-        
-        
-        public Character(int health, int motion, int atk, int tradDmg, int futurDmg)
+        public Character(int speed, int will, int mind, int power, int vitality)
         {
-            hp = health;
-            movement = motion;
-            attack = atk;
-            //tradDamage = tradDmg;
-            //futurDamage = futurDmg;
+            this.speed = speed;
+            this.will = will;
+            this.mind = mind;
+            this.power = power;
+            this.vitality = vitality;
+
+            currHealth = MaxHealth;
+            knownAttacks = new List<Attack>();
         }
 
-        public int Damage()
+        public bool IsDead()
         {
-            double pTraditionalist = traditionalist * .01;
-            double pFuturist = futurist *.01;
-            damage = (int)((tradDamage * pTraditionalist) + (futurDamage * pFuturist)) * attack;
-            return damage;
-        }
-        
-        public int HP
-        {
-            get { return hp; }
-            set { hp = value; }
-        }
-
-        public int Movement
-        {
-            get { return movement; }
-            set { movement = value; }
-        }
-
-        public int Attack
-        {
-            get { return attack; }
-            set { attack = value; }
-        }
-
-        public int TradDamage
-        {
-            get { return tradDamage; }
-            set { tradDamage = value; }
-        }
-
-        public int FuturDamage
-        {
-            get { return futurDamage; }
-            set { futurDamage = value; }
+            return currHealth <= 0;
         }
     }
 }

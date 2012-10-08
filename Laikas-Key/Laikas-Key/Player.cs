@@ -5,9 +5,10 @@ using System.Text;
 
 namespace Laikas_Key
 {
-    class Player
+    static class Player
     {
-        int money;
-        List<Character> party;
+        private static int money;
+        private static List<Character> party = new List<Character>();
+        public static List<Character> Party { get { return party; } }
     }
 }

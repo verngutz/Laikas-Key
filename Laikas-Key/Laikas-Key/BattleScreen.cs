@@ -12,6 +12,7 @@ namespace Laikas_Key
         public static BattleScreen Instance { set; get; }
 
         private MiTileEngine tileEngine;
+        private List<Character> enemies;
 
         public BattleScreen(MiGame game, MiTileEngine tileEngine)
             : base(game)
@@ -20,6 +21,19 @@ namespace Laikas_Key
             {
                 this.tileEngine = tileEngine;
                 inputResponses[Controller.START] = new MiScript(Escape);
+
+                Character grunt1 = new Character(5, 5, 5, 5, 5);
+                Character grunt2 = new Character(5, 5, 5, 5, 5);
+                Character grunt3 = new Character(5, 5, 5, 5, 5);
+                enemies = new List<Character>() { grunt1, grunt2, grunt3 };
+
+                Character you = new Character(5, 5, 5, 5, 5);
+                Character someGuy = new Character(5, 5, 5, 5, 5);
+                Character someOtherGuy = new Character(5, 5, 5, 5, 5);
+
+                Player.Party.Add(you);
+                Player.Party.Add(someGuy);
+                Player.Party.Add(someOtherGuy);
             }
             else
             {
