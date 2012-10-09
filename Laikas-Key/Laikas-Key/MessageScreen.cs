@@ -16,6 +16,7 @@ namespace Laikas_Key
         public string Message { set { message = value; } }
 
         private MiAnimatingComponent background;
+        private bool entryExitMutex;
 
         public MessageScreen(MiGame game)
             : base(game)
@@ -24,6 +25,7 @@ namespace Laikas_Key
             {
                 background = new MiAnimatingComponent(game, 0, 400, MiResolution.VirtualWidth, MiResolution.VirtualHeight - 400, 0, 0, 0, 0);
                 inputResponses[Controller.A] = new MiScript(ExitSequence);
+                entryExitMutex = false;
             }
             else
             {
@@ -49,19 +51,29 @@ namespace Laikas_Key
 
         public override IEnumerator<ulong> EntrySequence()
         {
+            if (entryExitMutex)
+                yield break;
+
+            entryExitMutex = true;
             background.AlphaOverTime.Keys.Add(new CurveKey(background.AlphaChangeTimer + 30, 255));
             background.AlphaChangeEnabled = true;
             yield return 30;
             background.AlphaChangeEnabled = false;
+            entryExitMutex = false;
         }
 
         public override IEnumerator<ulong> ExitSequence()
         {
+            if (entryExitMutex)
+                yield break;
+
+            entryExitMutex = true;
             background.AlphaOverTime.Keys.Add(new CurveKey(background.AlphaChangeTimer + 30, 0));
             background.AlphaChangeEnabled = true;
             yield return 30;
             background.AlphaChangeEnabled = false;
             Game.PopScreen();
+            entryExitMutex = false;
         }
     }
 }

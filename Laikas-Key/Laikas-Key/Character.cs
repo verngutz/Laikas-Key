@@ -9,7 +9,9 @@ namespace Laikas_Key
     {
         private int speed;
         public int Speed { get { return speed; } }
-        public int MovementPoints { get { return speed; } }
+        public int MaxMovementPoints { get { return 3 + (int)(speed * 0.0005); } }
+
+        public int CurrMovementPoints { set; get; }
 
         private int will;
         public int Will { get { return will; } }
@@ -22,10 +24,9 @@ namespace Laikas_Key
 
         private int vitality;
         public int Vitality { get { return vitality; } }
-        public int MaxHealth { get { return vitality; } }
+        public int MaxHealth { get { return vitality * 10; } }
 
-        private int currHealth;
-        public int CurrHealth { get { return currHealth; } }
+        public int CurrHealth { set; get; }
 
         private List<Attack> knownAttacks;
         public List<Attack> KnownAttacks { get { return knownAttacks; } }
@@ -42,13 +43,14 @@ namespace Laikas_Key
             this.power = power;
             this.vitality = vitality;
 
-            currHealth = MaxHealth;
+            CurrHealth = MaxHealth;
+            CurrMovementPoints = MaxMovementPoints;
             knownAttacks = new List<Attack>();
         }
 
         public bool IsDead()
         {
-            return currHealth <= 0;
+            return CurrHealth <= 0;
         }
     }
 }

@@ -7,8 +7,11 @@ namespace Laikas_Key
 {
     class Attack
     {
-        public static Attack shootGun = new Attack("Shoot Gun", 10);
-        public static Attack swingSword = new Attack("Sword Swing", 15);
+        public static Attack shootGun = new Attack("Shoot Gun", 0, 3, 4, 1, 1);
+        public static Attack swingSword = new Attack("Sword Swing", 3, 0, 1, 2, 2);
+
+        private string name;
+        public string Name { get { return name; } }
 
         private int traditionalBaseDamage;
         public int TraditionalBaseDamage { get { return traditionalBaseDamage; } }
@@ -16,10 +19,23 @@ namespace Laikas_Key
         private int futuristBaseDamage;
         public int FuturistBaseDamage { get { return futuristBaseDamage; } }
 
-        
-        private Attack(String name, int baseDmg)
-        {
+        private int range;
+        public int Range { get { return range; } }
 
+        private int movementCost;
+        public int MovementCost { get { return movementCost; } }
+
+        private int aoe;
+        public int AOE { get { return aoe; } }
+        
+        private Attack(String name, int traditionalBaseDamage, int futuristBaseDamage, int range, int movementCost, int aoe)
+        {
+            this.name = name;
+            this.traditionalBaseDamage = traditionalBaseDamage;
+            this.futuristBaseDamage = futuristBaseDamage;
+            this.range = range;
+            this.movementCost = movementCost;
+            this.aoe = aoe;
         }
     }
 }

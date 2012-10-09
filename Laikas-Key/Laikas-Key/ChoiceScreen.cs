@@ -21,6 +21,8 @@ namespace Laikas_Key
         private MiAnimatingComponent background;
         private MiAnimatingComponent cursor;
 
+        private bool entryExitMutex;
+
         public ChoiceScreen(MiGame game)
             : base(game)
         {
@@ -33,6 +35,7 @@ namespace Laikas_Key
                 inputResponses[Controller.A] = new MiScript(Pressed);
                 inputResponses[Controller.UP] = new MiScript(Upped);
                 inputResponses[Controller.DOWN] = new MiScript(Downed);
+                entryExitMutex = false;
             }
             else
             {
@@ -67,19 +70,29 @@ namespace Laikas_Key
 
         public override IEnumerator<ulong> EntrySequence()
         {
+            if (entryExitMutex)
+                yield break;
+
+            entryExitMutex = true;
             background.AlphaOverTime.Keys.Add(new CurveKey(background.AlphaChangeTimer + 30, 255));
             background.AlphaChangeEnabled = true;
             yield return 30;
             background.AlphaChangeEnabled = false;
+            entryExitMutex = false;
         }
 
         public override IEnumerator<ulong> ExitSequence()
         {
+            if (entryExitMutex)
+                yield break;
+
+            entryExitMutex = true;
             background.AlphaOverTime.Keys.Add(new CurveKey(background.AlphaChangeTimer + 30, 0));
             background.AlphaChangeEnabled = true;
             yield return 30;
             background.AlphaChangeEnabled = false;
             Game.PopScreen();
+            entryExitMutex = false;
         }
 
         public IEnumerator<ulong> Upped()
