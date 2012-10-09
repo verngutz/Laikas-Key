@@ -7,8 +7,8 @@ namespace Laikas_Key
 {
     class Attack
     {
-        public static Attack shootGun = new Attack("Shoot Gun", 0, 3, 4, 1, 1);
-        public static Attack swingSword = new Attack("Sword Swing", 3, 0, 1, 2, 2);
+        public static Attack shootGun = new Attack("Shoot Gun", 0, 3, 4, 1, 0);
+        public static Attack swingSword = new Attack("Sword Swing", 3, 0, 1, 2, 1);
 
         private string name;
         public string Name { get { return name; } }

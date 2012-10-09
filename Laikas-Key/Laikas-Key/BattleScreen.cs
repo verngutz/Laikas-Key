@@ -12,7 +12,7 @@ namespace Laikas_Key
     {
         public static BattleScreen Instance { set; get; }
 
-        private enum BattleState { SETUP, CHARACTER_SELECT, CHARACTER_MOVE, CHARACTER_ATTACK, ENEMY_TURN, NOTIF_SETUP }
+        private enum BattleState { SETUP, CHARACTER_SELECT, CHARACTER_MOVE, CHARACTER_ATTACK, ENEMY_TURN, NOTIF }
         private BattleState state;
 
         private MiTileEngine tileEngine;
@@ -32,6 +32,7 @@ namespace Laikas_Key
         private int selectedCharacterX;
         private int selectedCharacterY;
         private Dictionary<Point, int> selectedValidMoves;
+        private Dictionary<Point, int> selectedAOE;
         private Attack selectedAttack;
 
         private Random random;
@@ -68,24 +69,25 @@ namespace Laikas_Key
                 Player.Party.Add(someGuy);
                 Player.Party.Add(someOtherGuy);
 
-                state = BattleState.NOTIF_SETUP;
+                state = BattleState.NOTIF;
 
                 positions = new Dictionary<Character, Point>();
                 positions[grunt1] = new Point(10, 0);
-                positions[grunt2] = new Point(10, 7);
+                positions[grunt2] = new Point(10, 6);
                 positions[grunt3] = new Point(11, 3);
 
                 positions[you] = new Point(0, 2);
                 positions[someGuy] = new Point(0, 4);
                 positions[someOtherGuy] = new Point(1, 3);
 
-                cursor = new MiAnimatingComponent(game, 0, 0, tileEngine.TileWidth, tileEngine.TileHeight);
+                cursor = new MiAnimatingComponent(game, 0, 50, tileEngine.TileWidth, tileEngine.TileHeight);
                 cursor.Color = Color.Yellow;
                 cursorX = 0;
                 cursorY = 0;
                 setupIndex = 3;
 
                 selectedValidMoves = new Dictionary<Point, int>();
+                selectedAOE = new Dictionary<Point, int>();
 
                 random = new Random();
             }
@@ -105,11 +107,10 @@ namespace Laikas_Key
                     {'g', 'g', 'g', 'g', 'r', 'g', 'g', 'r', 'g', 'r', 'r', 'g'},
                     {'g', 'g', 'r', 'r', 'r', 'g', 'g', 'r', 'g', 'g', 'r', 'g'},
                     {'g', 'r', 'r', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'r', 'g'},
-                    {'g', 'g', 'r', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g'},
                     {'g', 'g', 'r', 'r', 'r', 'g', 'g', 'r', 'g', 'g', 'g', 'g'},
                     {'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
                 },
-                0, 0
+                0, 50
             );
         }
 
@@ -124,7 +125,12 @@ namespace Laikas_Key
             foreach (Character c in positions.Keys)
             {
                 Rectangle cBounds = tileEngine.BoundingRectangle(positions[c].X, positions[c].Y);
-                Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("taoDown"), cBounds, Player.Party.Contains(c) ? Color.White : Color.Red);
+                if (state == BattleState.CHARACTER_ATTACK && selectedAOE.ContainsKey(positions[c]))
+                    Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("taoDown"), cBounds, Player.Party.Contains(c) ? Color.Red : Color.DarkRed);
+                else if(state == BattleState.CHARACTER_ATTACK && selectedValidMoves.ContainsKey(positions[c]))
+                    Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("taoDown"), cBounds, Player.Party.Contains(c) ? Color.Yellow : Color.DarkGoldenrod);
+                else
+                    Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("taoDown"), cBounds, Player.Party.Contains(c) ? Color.White : Color.Gray);
                 Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Bottom - 20, cBounds.Width, 20), Color.Brown);
                 Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Bottom - 20, c.CurrHealth * cBounds.Width / c.MaxHealth, 20), Color.Green);
                 Game.SpriteBatch.DrawString(
@@ -133,8 +139,15 @@ namespace Laikas_Key
                     new Vector2(tileEngine.BoundingRectangle(positions[c].X, positions[c].Y).X, tileEngine.BoundingRectangle(positions[c].X, positions[c].Y).Y),
                     Color.Green);
             }
-            if (cursor.Visible)
-                cursor.Draw(gameTime);
+            switch (state)
+            {
+                case BattleState.CHARACTER_ATTACK:
+                case BattleState.CHARACTER_MOVE:
+                case BattleState.CHARACTER_SELECT:
+                case BattleState.SETUP:
+                    cursor.Draw(gameTime);
+                    break;
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -144,9 +157,27 @@ namespace Laikas_Key
                 return;
             }
 
+            if (Player.Party.Count == 0)
+            {
+                ChoiceScreen.Instance.Message = "You FUCKING died, BITCH!";
+                ChoiceScreen.Instance.SetChoices(new KeyValuePair<string, MiScript>("Yeah Whatever...", new MiScript(Escaped)));
+                Game.PushScreen(ChoiceScreen.Instance);
+                Game.ScriptEngine.ExecuteScript(new MiScript(ChoiceScreen.Instance.EntrySequence));
+                return;
+            }
+
+            if (enemies.Count == 0)
+            {
+                ChoiceScreen.Instance.Message = "You FUCKING won, BITCH!";
+                ChoiceScreen.Instance.SetChoices(new KeyValuePair<string, MiScript>("Yeah Whatever...", new MiScript(Escaped)));
+                Game.PushScreen(ChoiceScreen.Instance);
+                Game.ScriptEngine.ExecuteScript(new MiScript(ChoiceScreen.Instance.EntrySequence));
+                return;
+            }
+
             switch (state)
             {
-                case BattleState.NOTIF_SETUP:
+                case BattleState.NOTIF:
                     if (setupIndex < Player.Party.Count)
                     {
                         MessageScreen.Instance.Message = "Select Location for " + Player.Party[setupIndex].Name;
@@ -218,7 +249,7 @@ namespace Laikas_Key
                 positions.Remove(c);
             }
             setupIndex = 0;
-            state = BattleState.NOTIF_SETUP;
+            state = BattleState.NOTIF;
             Game.RemoveAllScreens();
             Game.PushScreen(WorldScreen.Instance);
             yield break;
@@ -230,6 +261,21 @@ namespace Laikas_Key
             {
                 cursorY--;
                 cursor.BoundingRectangle = tileEngine.BoundingRectangle(cursorX, cursorY);
+                if (state == BattleState.CHARACTER_ATTACK)
+                {
+                    for (int row = 0; row < tileEngine.MapGraphics.GetLength(0); row++)
+                    {
+                        for (int col = 0; col < tileEngine.MapGraphics.GetLength(1); col++)
+                        {
+                            tileEngine.MapGraphics[row, col].Color = Color.White;
+                        }
+                    }
+                    selectedValidMoves.Clear();
+                    selectedAOE.Clear();
+                    MapFloodFill(selectedCharacterX, selectedCharacterY, selectedAttack.Range, true, Color.Yellow, selectedValidMoves);
+                    if (selectedValidMoves.ContainsKey(new Point(cursorX, cursorY)))
+                        MapFloodFill(cursorX, cursorY, selectedAttack.AOE, true, Color.Salmon, selectedAOE);
+                }
             }
             yield break;
         }
@@ -240,6 +286,21 @@ namespace Laikas_Key
             {
                 cursorY++;
                 cursor.BoundingRectangle = tileEngine.BoundingRectangle(cursorX, cursorY);
+                if (state == BattleState.CHARACTER_ATTACK)
+                {
+                    for (int row = 0; row < tileEngine.MapGraphics.GetLength(0); row++)
+                    {
+                        for (int col = 0; col < tileEngine.MapGraphics.GetLength(1); col++)
+                        {
+                            tileEngine.MapGraphics[row, col].Color = Color.White;
+                        }
+                    }
+                    selectedValidMoves.Clear();
+                    selectedAOE.Clear();
+                    MapFloodFill(selectedCharacterX, selectedCharacterY, selectedAttack.Range, true, Color.Yellow, selectedValidMoves);
+                    if (selectedValidMoves.ContainsKey(new Point(cursorX, cursorY)))
+                        MapFloodFill(cursorX, cursorY, selectedAttack.AOE, true, Color.Salmon, selectedAOE);
+                }
             }
             yield break;
         }
@@ -250,6 +311,21 @@ namespace Laikas_Key
             {
                 cursorX--;
                 cursor.BoundingRectangle = tileEngine.BoundingRectangle(cursorX, cursorY);
+                if (state == BattleState.CHARACTER_ATTACK)
+                {
+                    for (int row = 0; row < tileEngine.MapGraphics.GetLength(0); row++)
+                    {
+                        for (int col = 0; col < tileEngine.MapGraphics.GetLength(1); col++)
+                        {
+                            tileEngine.MapGraphics[row, col].Color = Color.White;
+                        }
+                    }
+                    selectedValidMoves.Clear();
+                    selectedAOE.Clear();
+                    MapFloodFill(selectedCharacterX, selectedCharacterY, selectedAttack.Range, true, Color.Yellow, selectedValidMoves);
+                    if (selectedValidMoves.ContainsKey(new Point(cursorX, cursorY)))
+                        MapFloodFill(cursorX, cursorY, selectedAttack.AOE, true, Color.Salmon, selectedAOE);
+                }
             }
             yield break;
         }
@@ -260,6 +336,21 @@ namespace Laikas_Key
             {
                 cursorX++;
                 cursor.BoundingRectangle = tileEngine.BoundingRectangle(cursorX, cursorY);
+                if (state == BattleState.CHARACTER_ATTACK)
+                {
+                    for (int row = 0; row < tileEngine.MapGraphics.GetLength(0); row++)
+                    {
+                        for (int col = 0; col < tileEngine.MapGraphics.GetLength(1); col++)
+                        {
+                            tileEngine.MapGraphics[row, col].Color = Color.White;
+                        }
+                    }
+                    selectedValidMoves.Clear();
+                    selectedAOE.Clear();
+                    MapFloodFill(selectedCharacterX, selectedCharacterY, selectedAttack.Range, true, Color.Yellow, selectedValidMoves);
+                    if (selectedValidMoves.ContainsKey(new Point(cursorX, cursorY)))
+                        MapFloodFill(cursorX, cursorY, selectedAttack.AOE, true, Color.Salmon, selectedAOE);
+                }
             }
             yield break;
         }
@@ -269,7 +360,7 @@ namespace Laikas_Key
             switch (state)
             {
                 case BattleState.CHARACTER_SELECT:
-                    state = BattleState.NOTIF_SETUP;
+                    state = BattleState.NOTIF;
                     return null;
                 case BattleState.CHARACTER_MOVE:
                     positions[selectedCharacter] = new Point(selectedCharacterX, selectedCharacterY);
@@ -293,6 +384,7 @@ namespace Laikas_Key
                         }
                     }
                     selectedValidMoves.Clear();
+                    selectedAOE.Clear();
                     colorChanged = false;
                     state = BattleState.CHARACTER_SELECT;
                     return null;
@@ -310,7 +402,7 @@ namespace Laikas_Key
                     {
                         positions[Player.Party[setupIndex]] = new Point(cursorX, cursorY);
                         setupIndex++;
-                        state = BattleState.NOTIF_SETUP;
+                        state = BattleState.NOTIF;
                     }
                     else
                     {
@@ -343,6 +435,8 @@ namespace Laikas_Key
                                         delegate
                                         {
                                             Game.PopScreen();
+                                            selectedCharacterX = cursorX;
+                                            selectedCharacterY = cursorY;
                                             ChoiceScreen.Instance.Message = "Which Attack?";
                                             KeyValuePair<string, MiScript>[] attacks = new KeyValuePair<string, MiScript>[c.KnownAttacks.Count+1];
                                             for (int i = 0; i < c.KnownAttacks.Count; i++)
@@ -361,7 +455,8 @@ namespace Laikas_Key
                                                         {
                                                             selectedAttack = curr;
                                                             positions.Remove(c);
-                                                            MapFloodFill(cursorX, cursorY, curr.Range, true);
+                                                            MapFloodFill(cursorX, cursorY, curr.Range, true, Color.Yellow, selectedValidMoves);
+                                                            MapFloodFill(cursorX, cursorY, selectedAttack.AOE, true, Color.Salmon, selectedAOE);
                                                             positions[c] = new Point(cursorX, cursorY);
                                                             state = BattleState.CHARACTER_ATTACK;
                                                             return ChoiceScreen.Instance.ExitSequence();
@@ -379,7 +474,7 @@ namespace Laikas_Key
                                             selectedCharacterX = cursorX;
                                             selectedCharacterY = cursorY;
                                             positions.Remove(c);
-                                            MapFloodFill(cursorX, cursorY, c.CurrMovementPoints, false);
+                                            MapFloodFill(cursorX, cursorY, c.CurrMovementPoints, false, Color.Yellow, selectedValidMoves);
                                             colorChanged = true;
                                             state = BattleState.CHARACTER_MOVE;
                                             return ChoiceScreen.Instance.ExitSequence();
@@ -398,7 +493,7 @@ namespace Laikas_Key
                         positions[selectedCharacter] = new Point(cursorX, cursorY);
                         selectedCharacter.CurrMovementPoints -= Math.Abs(cursorX - selectedCharacterX) + Math.Abs(cursorY - selectedCharacterY);
                         selectedValidMoves.Clear();
-                        state = BattleState.NOTIF_SETUP;
+                        state = BattleState.NOTIF;
                     }
                     else
                     {
@@ -417,7 +512,7 @@ namespace Laikas_Key
                         selectedCharacter.CurrMovementPoints -= selectedAttack.MovementCost;
                         foreach (Character c in positions.Keys)
                         {
-                            if (Math.Abs(positions[c].X - cursorX) + Math.Abs(positions[c].Y - cursorY) < selectedAttack.AOE)
+                            if (Math.Abs(positions[c].X - cursorX) + Math.Abs(positions[c].Y - cursorY) <= selectedAttack.AOE)
                             {
                                 double dodgeChance = c.Speed * 0.0005;
                                 if (random.NextDouble() > dodgeChance)
@@ -443,9 +538,11 @@ namespace Laikas_Key
                         }
                         Player.Party.RemoveAll(c => c.IsDead());
                         enemies.RemoveAll(c => c.IsDead());
+                        Console.WriteLine(enemies.Count);
                         colorChanged = true;
                         selectedValidMoves.Clear();
-                        state = BattleState.NOTIF_SETUP;
+                        selectedAOE.Clear();
+                        state = BattleState.NOTIF;
                     }
                     else
                     {
@@ -462,11 +559,11 @@ namespace Laikas_Key
             yield break;
         }
 
-        private void MapFloodFill(int x, int y, int radius, bool includeOccupied)
+        private void MapFloodFill(int x, int y, int radius, bool includeOccupied, Color color, Dictionary<Point, int> toFill)
         {
             Point p = new Point(x, y);
 
-            if (selectedValidMoves.ContainsKey(p) && selectedValidMoves[p] >= radius
+            if (toFill.ContainsKey(p) && toFill[p] >= radius
                 || radius < 0 
                 || x < 0 
                 || x >= tileEngine.MapGraphics.GetLength(1) 
@@ -476,16 +573,21 @@ namespace Laikas_Key
                 || !tileEngine.MapPassability[y, x])
                 return;
 
-            tileEngine.MapGraphics[y, x].Color = Color.Yellow;
-            selectedValidMoves[p] = radius;
-            MapFloodFill(x - 1, y, radius - 1, includeOccupied);
-            MapFloodFill(x + 1, y, radius - 1, includeOccupied);
-            MapFloodFill(x, y - 1, radius - 1, includeOccupied);
-            MapFloodFill(x, y + 1, radius - 1, includeOccupied);
+            tileEngine.MapGraphics[y, x].Color = color;
+            toFill[p] = radius;
+            MapFloodFill(x - 1, y, radius - 1, includeOccupied, color, toFill);
+            MapFloodFill(x + 1, y, radius - 1, includeOccupied, color, toFill);
+            MapFloodFill(x, y - 1, radius - 1, includeOccupied, color, toFill);
+            MapFloodFill(x, y + 1, radius - 1, includeOccupied, color, toFill);
         }
 
         public IEnumerator<ulong> EnemyTurn()
         {
+            foreach (Character c in Player.Party)
+            {
+                c.CurrMovementPoints = c.MaxMovementPoints;
+            }
+            state = BattleState.NOTIF;
             yield break;
         }
     }
