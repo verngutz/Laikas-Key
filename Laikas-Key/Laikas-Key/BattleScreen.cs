@@ -158,7 +158,7 @@ namespace Laikas_Key
 
             if (Player.Party.Count == 0)
             {
-                ChoiceScreen.Instance.Message = "You FUCKING died, BITCH!";
+                ChoiceScreen.Instance.Message = "You died!";
                 ChoiceScreen.Instance.SetChoices(new KeyValuePair<string, MiScript>("Yeah Whatever...", new MiScript(Escaped)));
                 Game.PushScreen(ChoiceScreen.Instance);
                 Game.ScriptEngine.ExecuteScript(new MiScript(ChoiceScreen.Instance.EntrySequence));
@@ -167,7 +167,7 @@ namespace Laikas_Key
 
             if (enemies.Count == 0)
             {
-                ChoiceScreen.Instance.Message = "You FUCKING won, BITCH!";
+                ChoiceScreen.Instance.Message = "You won!";
                 ChoiceScreen.Instance.SetChoices(new KeyValuePair<string, MiScript>("Yeah Whatever...", new MiScript(Escaped)));
                 Game.PushScreen(ChoiceScreen.Instance);
                 Game.ScriptEngine.ExecuteScript(new MiScript(ChoiceScreen.Instance.EntrySequence));
@@ -405,7 +405,7 @@ namespace Laikas_Key
                     }
                     else
                     {
-                        MessageScreen.Instance.Message = "Nigga you can't put that SHIT there.";
+                        MessageScreen.Instance.Message = "You can't use that position.";
                         Game.PushScreen(MessageScreen.Instance);
                         Game.ScriptEngine.ExecuteScript(new MiScript(MessageScreen.Instance.EntrySequence));
                         while (Game.InputHandler.Focused == MessageScreen.Instance)
@@ -421,7 +421,7 @@ namespace Laikas_Key
                         {
                             if (c.CurrMovementPoints <= 0)
                             {
-                                MessageScreen.Instance.Message = "Nigga " + c.Name + " has no movement points left and can't do anymore SHIT.";
+                                MessageScreen.Instance.Message = c.Name + " has no movement points left and can't do anymore actions.";
                                 Game.PushScreen(MessageScreen.Instance);
                                 Game.ScriptEngine.ExecuteScript(new MiScript(MessageScreen.Instance.EntrySequence));
                             }
@@ -446,7 +446,7 @@ namespace Laikas_Key
                                                     {
                                                         if (c.CurrMovementPoints < curr.MovementCost)
                                                         {
-                                                            MessageScreen.Instance.Message = "Nigga " + c.Name + " has not enough moves to do that SHIT.";
+                                                            MessageScreen.Instance.Message = c.Name + " does not have enough movement points for that.";
                                                             Game.PushScreen(MessageScreen.Instance);
                                                             return MessageScreen.Instance.EntrySequence();
                                                         }
@@ -497,7 +497,7 @@ namespace Laikas_Key
                     }
                     else
                     {
-                        MessageScreen.Instance.Message = "Nigga you can't put that SHIT there.";
+                        MessageScreen.Instance.Message = "You can't choose that position";
                         Game.PushScreen(MessageScreen.Instance);
                         Game.ScriptEngine.ExecuteScript(new MiScript(MessageScreen.Instance.EntrySequence));
                         while (Game.InputHandler.Focused == MessageScreen.Instance)
@@ -546,7 +546,7 @@ namespace Laikas_Key
                     }
                     else
                     {
-                        MessageScreen.Instance.Message = "Nigga that SHIT's too far to hit.";
+                        MessageScreen.Instance.Message = "Target out of range.";
                         Game.PushScreen(MessageScreen.Instance);
                         Game.ScriptEngine.ExecuteScript(new MiScript(MessageScreen.Instance.EntrySequence));
                         while (Game.InputHandler.Focused == MessageScreen.Instance)
