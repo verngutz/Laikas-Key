@@ -76,15 +76,11 @@ namespace Laikas_Key
                 positions[grunt2] = new Point(10, 6);
                 positions[grunt3] = new Point(11, 3);
 
-                positions[you] = new Point(0, 2);
-                positions[someGuy] = new Point(0, 4);
-                positions[someOtherGuy] = new Point(1, 3);
-
                 cursor = new MiAnimatingComponent(game, 0, 50, tileEngine.TileWidth, tileEngine.TileHeight);
                 cursor.Color = Color.Yellow;
                 cursorX = 0;
                 cursorY = 0;
-                setupIndex = 3;
+                setupIndex = 0;
 
                 selectedValidMoves = new Dictionary<Point, int>();
                 selectedAOE = new Dictionary<Point, int>();

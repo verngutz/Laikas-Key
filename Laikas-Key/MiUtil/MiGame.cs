@@ -79,7 +79,7 @@ namespace MiUtil
 
             inputHandler.Focused = toUpdate.Peek();
             inputHandler.Update(gameTime);
-
+             
             foreach (MiScreen screen in toUpdate)
                 screen.Update(gameTime);
 
