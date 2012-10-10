@@ -31,7 +31,7 @@ namespace Laikas_Key
                 choices = new KeyValuePair<string, MiScript>[0];
                 activeChoice = 0;
                 background = new MiAnimatingComponent(game, 0, 600, MiResolution.VirtualWidth, MiResolution.VirtualHeight - 600, 0, 0, 0, 0);
-                cursor = new MiAnimatingComponent(game, 0, 0, 50, 20);
+                cursor = new MiAnimatingComponent(game, 25, 0, 50, 20);
                 inputResponses[Controller.A] = new MiScript(Pressed);
                 inputResponses[Controller.UP] = new MiScript(Upped);
                 inputResponses[Controller.DOWN] = new MiScript(Downed);
@@ -68,11 +68,11 @@ namespace Laikas_Key
         {
             background.Draw(gameTime);
             int y = background.Position.Y + 50;
-            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), message, new Vector2(0, y), background.Color);
+            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), message, new Vector2(25, y), background.Color);
             foreach (KeyValuePair<string, MiScript> choice in choices)
             {
                 y += 30;
-                Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), choice.Key, new Vector2(75, y), background.Color);
+                Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), choice.Key, new Vector2(100, y), background.Color);
             }
             cursor.Draw(gameTime);
         }
@@ -134,7 +134,7 @@ namespace Laikas_Key
         {
             this.choices = choices;
             activeChoice = 0;
-            cursor.Position = new Point(0, 685);
+            cursor.Position = new Point(25, 685);
         }
     }
 }

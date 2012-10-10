@@ -29,10 +29,13 @@ namespace Laikas_Key
             inputHandler = new InputHandler(this);
 
             // Initialize Tile Engine
-            tileEngine = new MiTileEngine(this, 75, 75);
-            tileEngine.AddTileType('g', "Passable", true);
-            tileEngine.AddTileType('r', "Road", false);
-            tileEngine.AddTileType('t', "Treasure", false);
+            tileEngine = new MiTileEngine(this, 100, 100);
+            tileEngine.AddTileType('g', "Town View\\Carpet", true);
+            tileEngine.AddTileType('r', "Town View\\TownFloor", false);
+            tileEngine.AddTileType('t', "Town View\\Carpet_WS", false);
+            tileEngine.AddTileType('w', "Town View\\E_Carpet", false);
+            tileEngine.AddTileType('q', "Town View\\Carpet_WA", false);
+            tileEngine.AddTileType('h', "Town View\\TownFloor_v2", true);
 
             // Initialize screens
             StartScreen.Instance = new StartScreen(this);

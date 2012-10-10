@@ -46,7 +46,7 @@ namespace Laikas_Key
         public override void Draw(GameTime gameTime)
         {
             background.Draw(gameTime);
-            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), message, new Vector2(0, background.Position.Y + 50), background.Color);
+            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), message, new Vector2(25, background.Position.Y + 50), background.Color);
         }
 
         public override IEnumerator<ulong> EntrySequence()

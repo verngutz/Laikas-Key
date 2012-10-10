@@ -62,11 +62,11 @@ namespace Laikas_Key
                 new char[,]
                 {
                     {'r', 'r', 'r', 'r', 'r', 'r', 'r'},
-                    {'r', 'g', 'g', 'g', 'g', 't', 'r'},
+                    {'r', 'g', 'g', 'g', 'g', 'w', 'r'},
                     {'r', 'g', 'r', 'r', 'g', 'g', 'r'},
                     {'r', 'g', 'g', 't', 'r', 'g', 'r'},
                     {'r', 'g', 'r', 'g', 'r', 'g', 'r'},
-                    {'r', 'g', 'r', 'g', 'g', 't', 'r'},
+                    {'r', 'g', 'r', 'g', 'g', 'q', 'r'},
                     {'r', 'r', 'r', 'r', 'r', 'r', 'r'}
                 },
                 MiResolution.VirtualWidth / 2 - playerAvatar.Width / 2 - playerX * playerAvatar.Width, 
@@ -78,10 +78,10 @@ namespace Laikas_Key
 
         public override void LoadContent()
         {
-            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoUp"), AvatarDirection.UP, 0);
-            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoDown"), AvatarDirection.DOWN, 0);
-            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoLeft"), AvatarDirection.LEFT, 0);
-            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("taoRight"), AvatarDirection.RIGHT, 0);
+            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("Town View\\GenericFriend"), AvatarDirection.UP, 0);
+            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("Town View\\GenericFriend"), AvatarDirection.DOWN, 0);
+            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("Town View\\GenericFriend"), AvatarDirection.LEFT, 0);
+            playerAvatar.AddTexture(Game.Content.Load<Texture2D>("Town View\\GenericFriend"), AvatarDirection.RIGHT, 0);
         }
 
         public override void Update(GameTime gameTime)

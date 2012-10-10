@@ -45,6 +45,8 @@ namespace Laikas_Key
         {
             if (Instance == null)
             {
+
+                flash = new MiAnimatingComponent(Game, 0, 0, 1280, 800, 0, 0, 0, 0);
                 this.tileEngine = tileEngine;
                 inputResponses[Controller.START] = new MiScript(Escaped);
                 inputResponses[Controller.LEFT] = new MiScript(Lefted);
@@ -53,19 +55,19 @@ namespace Laikas_Key
                 inputResponses[Controller.DOWN] = new MiScript(Downed);
                 inputResponses[Controller.A] = new MiScript(Pressed);
 
-                Character grunt1 = new Character("grunt1", 5, 5, 5, 5, 5);
-                Character grunt2 = new Character("grunt2", 5, 5, 5, 5, 5);
-                Character grunt3 = new Character("grunt3", 5, 5, 5, 5, 5);
+                Character grunt1 = new Character("Grunt 1", 5, 5, 5, 5, 5);
+                Character grunt2 = new Character("Grunt 2", 5, 5, 5, 5, 5);
+                Character grunt3 = new Character("Grunt 3", 5, 5, 5, 5, 5);
                 enemies = new List<Character>() { grunt1, grunt2, grunt3 };
 
-                Character you = new Character("you", 5, 5, 5, 5, 5);
+                Character you = new Character("You", 5, 5, 5, 5, 5);
                 you.KnownAttacks.Add(Attack.shootGun);
                 you.KnownAttacks.Add(Attack.swingSword);
 
-                Character someGuy = new Character("someguy", 5, 5, 5, 5, 5);
+                Character someGuy = new Character("Patrick", 5, 5, 5, 5, 5);
                 someGuy.KnownAttacks.Add(Attack.shootGun);
 
-                Character someOtherGuy = new Character("someotherguy",5, 5, 5, 5, 5);
+                Character someOtherGuy = new Character("Van Leigh",5, 5, 5, 5, 5);
                 someOtherGuy.KnownAttacks.Add(Attack.swingSword);
 
                 Player.Party.Add(you);
@@ -79,7 +81,7 @@ namespace Laikas_Key
                 positions[grunt2] = new Point(10, 6);
                 positions[grunt3] = new Point(11, 3);
 
-                cursor = new MiAnimatingComponent(game, 0, 50, tileEngine.TileWidth, tileEngine.TileHeight);
+                cursor = new MiAnimatingComponent(game, 50, 50, tileEngine.TileWidth, tileEngine.TileHeight);
                 cursor.Color = Color.Yellow;
                 cursorX = 0;
                 cursorY = 0;
@@ -101,21 +103,22 @@ namespace Laikas_Key
             tileEngine.LoadMap(
                 new char[,]
                 {
-                    {'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-                    {'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-                    {'g', 'g', 'g', 'g', 'r', 'g', 'g', 'r', 'g', 'r', 'r', 'g'},
-                    {'g', 'g', 'r', 'r', 'r', 'g', 'g', 'r', 'g', 'g', 'r', 'g'},
-                    {'g', 'r', 'r', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'r', 'g'},
-                    {'g', 'g', 'r', 'r', 'r', 'g', 'g', 'r', 'g', 'g', 'g', 'g'},
-                    {'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+                    {'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h'},
+                    {'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h'},
+                    {'h', 'h', 'h', 'h', 'r', 'h', 'h', 'r', 'h', 'r', 'r', 'h'},
+                    {'h', 'h', 'r', 'r', 'r', 'h', 'h', 'r', 'h', 'h', 'r', 'h'},
+                    {'h', 'r', 'r', 'h', 'h', 'h', 'h', 'r', 'h', 'h', 'r', 'h'},
+                    {'h', 'h', 'r', 'r', 'r', 'h', 'h', 'r', 'h', 'h', 'h', 'h'},
+                    {'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h'},
                 },
-                0, 50
+                50, 50
             );
         }
 
         public override void LoadContent()
         {
             cursor.AddTexture(Game.Content.Load<Texture2D>("buttonHover"), 0);
+            flash.AddTexture(Game.Content.Load<Texture2D>("button"), 0);
         }
 
         public override void Draw(GameTime gameTime)
@@ -125,18 +128,45 @@ namespace Laikas_Key
             {
                 Rectangle cBounds = tileEngine.BoundingRectangle(positions[c].X, positions[c].Y);
                 if (state == BattleState.CHARACTER_ATTACK && selectedAOE.ContainsKey(positions[c]))
-                    Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("taoDown"), cBounds, Player.Party.Contains(c) ? Color.Red : Color.DarkRed);
-                else if(state == BattleState.CHARACTER_ATTACK && selectedValidMoves.ContainsKey(positions[c]))
-                    Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("taoDown"), cBounds, Player.Party.Contains(c) ? Color.Yellow : Color.DarkGoldenrod);
+                {
+                    if (Player.Party.Contains(c))
+                    {
+                        Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("Town View\\GenericFriend"), cBounds, Color.Red);
+                    }
+                    else
+                    {
+                        Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("Town View\\GenericEnemy"), cBounds, Color.Red);
+                    }
+                }
+                else if (state == BattleState.CHARACTER_ATTACK && selectedValidMoves.ContainsKey(positions[c]))
+                {
+                    if (Player.Party.Contains(c))
+                    {
+                        Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("Town View\\GenericFriend"), cBounds, Color.Yellow);
+                    }
+                    else
+                    {
+                        Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("Town View\\GenericEnemy"), cBounds, Color.Yellow);
+                    }
+                }
                 else
-                    Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("taoDown"), cBounds, Player.Party.Contains(c) ? Color.White : Color.Gray);
-                Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Bottom - 20, cBounds.Width, 20), Color.Brown);
-                Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Bottom - 20, c.CurrHealth * cBounds.Width / c.MaxHealth, 20), Color.Green);
+                {
+                    if (Player.Party.Contains(c))
+                    {
+                        Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("Town View\\GenericFriend"), cBounds, Color.White);
+                    }
+                    else
+                    {
+                        Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("Town View\\GenericEnemy"), cBounds, Color.White);
+                    }
+                }
+                Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Top - 20, cBounds.Width, 20), Color.Brown);
+                Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Top - 20, c.CurrHealth * cBounds.Width / c.MaxHealth, 20), Color.Green);
                 Game.SpriteBatch.DrawString(
                     Game.Content.Load<SpriteFont>("Fonts\\Default"),
                     c.Name,
-                    new Vector2(tileEngine.BoundingRectangle(positions[c].X, positions[c].Y).X, tileEngine.BoundingRectangle(positions[c].X, positions[c].Y).Y),
-                    Color.Green);
+                    new Vector2(tileEngine.BoundingRectangle(positions[c].X, positions[c].Y).X, tileEngine.BoundingRectangle(positions[c].X, positions[c].Y).Y - 50),
+                    Color.White);
             }
             switch (state)
             {
@@ -147,10 +177,14 @@ namespace Laikas_Key
                     cursor.Draw(gameTime);
                     break;
             }
+
+            flash.Draw(gameTime);
         }
 
         public override void Update(GameTime gameTime)
         {
+
+            flash.Update(gameTime);
             if (Game.InputHandler.Focused == MessageScreen.Instance || Game.InputHandler.Focused == ChoiceScreen.Instance)
             {
                 return;
@@ -523,7 +557,6 @@ namespace Laikas_Key
                                         - (0.5 + random.NextDouble())
                                         * (c.Will * selectedAttack.TraditionalBaseDamage + c.Mind * selectedAttack.FuturistBaseDamage)
                                         * c.Vitality / 20);
-                                    Console.WriteLine(c.Name + " received " + damage + " damage.");
                                     c.CurrHealth -= damage;
                                 }
                             }
@@ -538,10 +571,10 @@ namespace Laikas_Key
                         }
                         Player.Party.RemoveAll(c => c.IsDead());
                         enemies.RemoveAll(c => c.IsDead());
-                        Console.WriteLine(enemies.Count);
                         colorChanged = true;
                         selectedValidMoves.Clear();
                         selectedAOE.Clear();
+                        Game.ScriptEngine.ExecuteScript(new MiScript(Flash));
                         state = BattleState.NOTIF;
                     }
                     else
@@ -596,6 +629,16 @@ namespace Laikas_Key
             positions[selectedCharacter] = new Point(selectedCharacterX, selectedCharacterY);
             selectedCharacter.CurrMovementPoints += selectedCharacterMovePtsUsed;
             selectedCharacterMovePtsUsed = 0;
+        }
+
+        private MiAnimatingComponent flash;
+        public IEnumerator<ulong> Flash()
+        {
+            flash.AlphaChangeEnabled = true;
+            flash.AlphaOverTime.Keys.Add(new CurveKey(flash.AlphaChangeTimer + 12, 255));
+            flash.AlphaOverTime.Keys.Add(new CurveKey(flash.AlphaChangeTimer + 25, 0));
+            yield return 37;
+            flash.AlphaChangeEnabled = false;
         }
     }
 }
