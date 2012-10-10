@@ -226,7 +226,7 @@ namespace Laikas_Key
                         delegate 
                         {
                             Game.PopScreen();
-                            MessageScreen.Instance.Message = "Your FUCKING backwardness is preventing equality for all.";
+                            MessageScreen.Instance.Message = "Your backwardness is preventing equality for all.";
                             Game.PushScreen(MessageScreen.Instance);
                             return MessageScreen.Instance.EntrySequence();
                         })),
@@ -234,7 +234,7 @@ namespace Laikas_Key
                         delegate
                         {
                             Game.PopScreen();
-                            MessageScreen.Instance.Message = "Your FUCKING technology is destroying the earth.";
+                            MessageScreen.Instance.Message = "Your technology is destroying the earth.";
                             Game.PushScreen(MessageScreen.Instance);
                             return MessageScreen.Instance.EntrySequence();
                         }))
