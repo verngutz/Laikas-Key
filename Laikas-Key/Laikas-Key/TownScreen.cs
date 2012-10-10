@@ -62,11 +62,11 @@ namespace Laikas_Key
                 new char[,]
                 {
                     {'r', 'r', 'r', 'r', 'r', 'r', 'r'},
-                    {'r', 'g', 'g', 'g', 'g', 'g', 'r'},
-                    {'r', 'g', 'r', 'r', 'r', 'g', 'r'},
+                    {'r', 'g', 'g', 'g', 'g', 't', 'r'},
+                    {'r', 'g', 'r', 'r', 'g', 'g', 'r'},
                     {'r', 'g', 'g', 't', 'r', 'g', 'r'},
                     {'r', 'g', 'r', 'g', 'r', 'g', 'r'},
-                    {'r', 'g', 'r', 'g', 'g', 'g', 'r'},
+                    {'r', 'g', 'r', 'g', 'g', 't', 'r'},
                     {'r', 'r', 'r', 'r', 'r', 'r', 'r'}
                 },
                 MiResolution.VirtualWidth / 2 - playerAvatar.Width / 2 - playerX * playerAvatar.Width, 
@@ -237,6 +237,57 @@ namespace Laikas_Key
                             return MessageScreen.Instance.EntrySequence();
                         }))
                 );
+
+                Game.PushScreen(ChoiceScreen.Instance);
+                return ChoiceScreen.Instance.EntrySequence();
+            }
+            else if (playerFrontX == 5 && playerFrontY == 1)
+            {
+                ChoiceScreen.Instance.Message = "Would you like to know more about the war?";
+                ChoiceScreen.Instance.SetChoices(
+                    new KeyValuePair<string, MiScript>("Yes", new MiScript(
+                        delegate
+                        {
+                            Game.PopScreen();
+                            MessageScreen.Instance.Message = "This war is rooted in the differences of Traditionalists and Futurists.";
+                            Game.PushScreen(MessageScreen.Instance);
+                            return MessageScreen.Instance.EntrySequence();
+                        })),
+                    new KeyValuePair<string, MiScript>("No", new MiScript(
+                        delegate
+                        {
+                            Game.PopScreen();
+                            MessageScreen.Instance.Message = "You don't really care do you?";
+                            Game.PushScreen(MessageScreen.Instance);
+                            return MessageScreen.Instance.EntrySequence();
+                        }))
+                );
+
+                Game.PushScreen(ChoiceScreen.Instance);
+                return ChoiceScreen.Instance.EntrySequence();
+            }
+            else if (playerFrontX == 5 && playerFrontY == 5)
+            {
+                ChoiceScreen.Instance.Message = "Would you rather fight or flee?";
+                ChoiceScreen.Instance.SetChoices(
+                    new KeyValuePair<string, MiScript>("Fight", new MiScript(
+                        delegate
+                        {
+                            Game.PopScreen();
+                            MessageScreen.Instance.Message = "Careful, don't forget about your team";
+                            Game.PushScreen(MessageScreen.Instance);
+                            return MessageScreen.Instance.EntrySequence();
+                        })),
+                    new KeyValuePair<string, MiScript>("Flee", new MiScript(
+                        delegate
+                        {
+                            Game.PopScreen();
+                            MessageScreen.Instance.Message = "You can't always run...";
+                            Game.PushScreen(MessageScreen.Instance);
+                            return MessageScreen.Instance.EntrySequence();
+                        }))
+                );
+
                 Game.PushScreen(ChoiceScreen.Instance);
                 return ChoiceScreen.Instance.EntrySequence();
             }
