@@ -22,7 +22,7 @@ namespace Laikas_Key
         protected override void Initialize()
         {
             // Set the game resolution
-            MiResolution.SetVirtualResolution(900, 600);
+            MiResolution.SetVirtualResolution(1280, 800);
             MiResolution.SetResolution(900, 600, false);
 
             // Initialize Input Handler

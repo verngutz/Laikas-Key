@@ -93,8 +93,6 @@ namespace Laikas_Key
         {
             tileEngine.Draw(gameTime);
             playerAvatar.Draw(gameTime);
-            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), playerX + " " + playerY, Vector2.Zero, Color.White);
-            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), playerFrontX + " " + playerFrontY, new Vector2(0, 100), Color.White);
         }
 
         public IEnumerator<ulong> Escape()

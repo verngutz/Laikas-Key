@@ -14,16 +14,22 @@ namespace Laikas_Key
 
         private MiAnimatingComponent newGameButtonBase;
         private MiAnimatingComponent quitGameButtonBase;
-        private MiAnimatingComponent cursor;
 
         private MiButton newGameButton;
         private MiButton quitGameButton;
+
+        private MiAnimatingComponent background;
+
+        private MiAnimatingComponent cursor;
 
         public StartScreen(MiGame game)
             : base(game)
         {
             if (Instance == null)
             {
+                background = new MiAnimatingComponent(game,0, 0, 1280, 800);
+                cursor = new MiAnimatingComponent(game, 683, 328, 33, 35);
+
                 //
                 // New Game Button
                 //
@@ -35,7 +41,7 @@ namespace Laikas_Key
                         Game.PushScreen(WorldScreen.Instance);
                         return null;
                     });
-                newGameButtonBase = new MiAnimatingComponent(game, 100, 300, 100, 75);
+                newGameButtonBase = new MiAnimatingComponent(game, 733, 278, 502, 107);
 
                 //
                 // Quit Game Button
@@ -47,12 +53,7 @@ namespace Laikas_Key
                         Game.Exit();
                         return null;
                     });
-                quitGameButtonBase = new MiAnimatingComponent(game, 100, 400, 100, 75);
-
-                //
-                // Cursor
-                //
-                cursor = new MiAnimatingComponent(game, 100, 300, 100, 75);
+                quitGameButtonBase = new MiAnimatingComponent(game, 750, 418, 488, 127, 0, 0, 0, 0);
 
                 //
                 // Default Active Button
@@ -74,22 +75,25 @@ namespace Laikas_Key
 
         public override void LoadContent()
         {
-            newGameButtonBase.AddTexture(Game.Content.Load<Texture2D>("button"), 0);
-            quitGameButtonBase.AddTexture(Game.Content.Load<Texture2D>("button"), 0);
-            cursor.AddTexture(Game.Content.Load<Texture2D>("buttonHover"), 0);
+            newGameButtonBase.AddTexture(Game.Content.Load<Texture2D>("Main Menu\\playglow"), 0);
+            quitGameButtonBase.AddTexture(Game.Content.Load<Texture2D>("Main Menu\\quitglow"), 0);
+            background.AddTexture(Game.Content.Load<Texture2D>("Main Menu\\MainMenu_BG"), 0);
+            cursor.AddTexture(Game.Content.Load<Texture2D>("Main Menu\\pointer"), 0);
         }
 
         public override void Update(GameTime gameTime)
         {
             newGameButtonBase.Update(gameTime);
             quitGameButtonBase.Update(gameTime);
-            cursor.Update(gameTime);
+            background.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            newGameButtonBase.Draw(gameTime);
-            quitGameButtonBase.Draw(gameTime);
+            
+            background.Draw(gameTime);
+            //newGameButtonBase.Draw(gameTime);
+            //quitGameButtonBase.Draw(gameTime);
             cursor.Draw(gameTime);
         }
 
@@ -97,8 +101,10 @@ namespace Laikas_Key
         {
             if (ActiveButton == quitGameButton)
             {
-                cursor.Position = newGameButtonBase.Position;
                 ActiveButton = newGameButton;
+                cursor.Position = new Point(cursor.Position.X, 328);
+                quitGameButtonBase.Color = Color.Transparent;
+                newGameButtonBase.Color = Color.White;
             }
             yield break;
         }
@@ -107,8 +113,10 @@ namespace Laikas_Key
         {
             if (ActiveButton == newGameButton)
             {
-                cursor.Position = quitGameButtonBase.Position;
                 ActiveButton = quitGameButton;
+                cursor.Position = new Point(cursor.Position.X, 478);
+                quitGameButtonBase.Color = Color.White;
+                newGameButtonBase.Color = Color.Transparent;
             }
             yield break;
         }

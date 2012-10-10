@@ -126,6 +126,11 @@ namespace MiUtil
             toDraw.RemoveLast();
         }
 
+        public bool ContainsScreen(MiScreen screen)
+        {
+            return toUpdate.Contains(screen);
+        }
+
         public void RemoveAllScreens()
         {
             toUpdate.Clear();

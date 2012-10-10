@@ -12,8 +12,9 @@ namespace Laikas_Key
     {
         public static BattleScreen Instance { set; get; }
 
-        private enum BattleState { SETUP, CHARACTER_SELECT, CHARACTER_MOVE, CHARACTER_ATTACK, ENEMY_TURN, NOTIF }
+        public enum BattleState { SETUP, CHARACTER_SELECT, CHARACTER_MOVE, CHARACTER_ATTACK, ENEMY_TURN, NOTIF }
         private BattleState state;
+        public BattleState State { get { return state; } }
 
         private MiTileEngine tileEngine;
         private List<Character> enemies;
@@ -24,6 +25,7 @@ namespace Laikas_Key
         private int cursorY;
 
         private int setupIndex;
+        public int SetupIndex { get { return setupIndex; } }
 
         bool colorChanged = false;
 
@@ -34,6 +36,7 @@ namespace Laikas_Key
         private Dictionary<Point, int> selectedValidMoves;
         private Dictionary<Point, int> selectedAOE;
         private Attack selectedAttack;
+        private int selectedCharacterMovePtsUsed;
 
         private Random random;
 
@@ -487,7 +490,8 @@ namespace Laikas_Key
                     if (selectedValidMoves.ContainsKey(new Point(cursorX, cursorY)))
                     {
                         positions[selectedCharacter] = new Point(cursorX, cursorY);
-                        selectedCharacter.CurrMovementPoints -= Math.Abs(cursorX - selectedCharacterX) + Math.Abs(cursorY - selectedCharacterY);
+                        selectedCharacterMovePtsUsed = Math.Abs(cursorX - selectedCharacterX) + Math.Abs(cursorY - selectedCharacterY);
+                        selectedCharacter.CurrMovementPoints -= selectedCharacterMovePtsUsed;
                         selectedValidMoves.Clear();
                         state = BattleState.NOTIF;
                     }
@@ -585,6 +589,13 @@ namespace Laikas_Key
             }
             state = BattleState.NOTIF;
             yield break;
+        }
+
+        public void Undo()
+        {
+            positions[selectedCharacter] = new Point(selectedCharacterX, selectedCharacterY);
+            selectedCharacter.CurrMovementPoints += selectedCharacterMovePtsUsed;
+            selectedCharacterMovePtsUsed = 0;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Laikas_Key
         {
             if (Instance == null)
             {
-                background = new MiAnimatingComponent(game, 0, 400, MiResolution.VirtualWidth, MiResolution.VirtualHeight - 400, 0, 0, 0, 0);
+                background = new MiAnimatingComponent(game, 0, 600, MiResolution.VirtualWidth, MiResolution.VirtualHeight - 600, 0, 0, 0, 0);
                 inputResponses[Controller.A] = new MiScript(ExitSequence);
                 entryExitMutex = false;
             }

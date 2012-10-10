@@ -30,11 +30,20 @@ namespace Laikas_Key
             {
                 choices = new KeyValuePair<string, MiScript>[0];
                 activeChoice = 0;
-                background = new MiAnimatingComponent(game, 0, 400, MiResolution.VirtualWidth, MiResolution.VirtualHeight - 400, 0, 0, 0, 0);
+                background = new MiAnimatingComponent(game, 0, 600, MiResolution.VirtualWidth, MiResolution.VirtualHeight - 600, 0, 0, 0, 0);
                 cursor = new MiAnimatingComponent(game, 0, 0, 50, 20);
                 inputResponses[Controller.A] = new MiScript(Pressed);
                 inputResponses[Controller.UP] = new MiScript(Upped);
                 inputResponses[Controller.DOWN] = new MiScript(Downed);
+                inputResponses[Controller.START] = new MiScript(
+                    delegate
+                    {
+                        if(Game.ContainsScreen(BattleScreen.Instance) && BattleScreen.Instance.State == BattleScreen.BattleState.NOTIF && BattleScreen.Instance.SetupIndex >= Player.Party.Count)
+                        {
+                            BattleScreen.Instance.Undo();
+                        }
+                        return null;
+                    });
                 entryExitMutex = false;
             }
             else
@@ -125,7 +134,7 @@ namespace Laikas_Key
         {
             this.choices = choices;
             activeChoice = 0;
-            cursor.Position = new Point(0, 485);
+            cursor.Position = new Point(0, 685);
         }
     }
 }

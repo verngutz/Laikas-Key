@@ -54,12 +54,13 @@ namespace Laikas_Key
 
             public void LoadContent()
             {
-                allyButtonBase.AddTexture(game.Content.Load<Texture2D>("buttonAlly"), 0);
-                enemyButtonBase.AddTexture(game.Content.Load<Texture2D>("buttonEnemy"), 0);
+                allyButtonBase.AddTexture(game.Content.Load<Texture2D>("World View\\FriendNode_v1"), 0);
+                enemyButtonBase.AddTexture(game.Content.Load<Texture2D>("World View\\EnemyNode_v1"), 0);
                 neutralButtonBase.AddTexture(game.Content.Load<Texture2D>("button"), 0);
             }
         }
 
+        private MiAnimatingComponent background;
         private LocationUI activeLocation;
         private List<LocationUI> allLocations;
 
@@ -70,40 +71,20 @@ namespace Laikas_Key
         {
             if (Instance == null)
             {
+                background = new MiAnimatingComponent(game, 0, 0, 1280, 800);
                 //
                 // Create UI for Locations
                 //
-                LocationUI test_1 = new LocationUI(game, 350, 100, 100, 75, Location.TEST_1);
-                LocationUI test_2 = new LocationUI(game, 150, 250, 100, 75, Location.TEST_2);
-                LocationUI test_3 = new LocationUI(game, 550, 250, 100, 75, Location.TEST_3);
-                LocationUI test_4 = new LocationUI(game, 350, 400, 100, 75, Location.TEST_4);
-                LocationUI test_5 = new LocationUI(game, 350, 250, 100, 75, Location.TEST_5);
+                LocationUI test_1 = new LocationUI(game, 650, 250, 128, 128, Location.TEST_1);
+                LocationUI test_2 = new LocationUI(game, 450, 450, 128, 128, Location.TEST_2);
 
                 Location.TEST_1.ControllingFaction = Location.State.ENEMY;
 
                 //
                 // Add Neighbors
                 //
-                test_1.Neighbors.Add(Controller.DOWN, test_5);
-                test_1.Neighbors.Add(Controller.RIGHT, test_3);
-                test_1.Neighbors.Add(Controller.LEFT, test_2);
-
+                test_1.Neighbors.Add(Controller.DOWN, test_2);
                 test_2.Neighbors.Add(Controller.UP, test_1);
-                test_2.Neighbors.Add(Controller.RIGHT, test_5);
-                test_2.Neighbors.Add(Controller.DOWN, test_4);
-
-                test_3.Neighbors.Add(Controller.LEFT, test_5);
-                test_3.Neighbors.Add(Controller.DOWN, test_4);
-                test_3.Neighbors.Add(Controller.UP, test_1);
-
-                test_4.Neighbors.Add(Controller.LEFT, test_2);
-                test_4.Neighbors.Add(Controller.RIGHT, test_3);
-                test_4.Neighbors.Add(Controller.UP, test_5);
-
-                test_5.Neighbors.Add(Controller.LEFT, test_2);
-                test_5.Neighbors.Add(Controller.RIGHT, test_3);
-                test_5.Neighbors.Add(Controller.DOWN, test_4);
-                test_5.Neighbors.Add(Controller.UP, test_1);
 
                 //
                 // Add All Locations to Global List
@@ -111,10 +92,6 @@ namespace Laikas_Key
                 allLocations = new List<LocationUI>();
                 allLocations.Add(test_1);
                 allLocations.Add(test_2);
-                allLocations.Add(test_3);
-                allLocations.Add(test_4);
-                allLocations.Add(test_5);
-
                 //
                 // Default Active Location
                 //
@@ -123,7 +100,7 @@ namespace Laikas_Key
                 //
                 // Cursor
                 //
-                cursor = new MiAnimatingComponent(game, activeLocation.ButtonBase.Position.X, activeLocation.ButtonBase.Position.Y, 100, 75);
+                cursor = new MiAnimatingComponent(game, activeLocation.ButtonBase.Position.X -50, activeLocation.ButtonBase.Position.Y + 30, 33, 35);
 
                 //
                 // Responses to Input
@@ -143,11 +120,12 @@ namespace Laikas_Key
 
         public override void LoadContent()
         {
+            background.AddTexture(Game.Content.Load<Texture2D>("World View\\Map"), 0);
             foreach (LocationUI locationUI in allLocations)
             {
                 locationUI.LoadContent();
             }
-            cursor.AddTexture(Game.Content.Load<Texture2D>("buttonHover"), 0);
+            cursor.AddTexture(Game.Content.Load<Texture2D>("Main Menu\\pointer"), 0);
         }
 
         public override void Update(GameTime gameTime)
@@ -156,6 +134,7 @@ namespace Laikas_Key
 
         public override void Draw(GameTime gameTime)
         {
+            background.Draw(gameTime);
             foreach (LocationUI locationUI in allLocations)
             {
                 locationUI.ButtonBase.Draw(gameTime);
@@ -169,7 +148,7 @@ namespace Laikas_Key
             if (activeLocation.Neighbors.ContainsKey(Controller.UP))
             {
                 activeLocation = activeLocation.Neighbors[Controller.UP];
-                cursor.Position = activeLocation.ButtonBase.Position;
+                cursor.Position = new Point(activeLocation.ButtonBase.Position.X - 50, activeLocation.ButtonBase.Position.Y + 30);
             }
             yield break;
         }
@@ -179,7 +158,7 @@ namespace Laikas_Key
             if (activeLocation.Neighbors.ContainsKey(Controller.DOWN))
             {
                 activeLocation = activeLocation.Neighbors[Controller.DOWN];
-                cursor.Position = activeLocation.ButtonBase.Position;
+                cursor.Position = new Point(activeLocation.ButtonBase.Position.X - 50, activeLocation.ButtonBase.Position.Y + 30);
             }
             yield break;
         }
