@@ -34,25 +34,26 @@ namespace Laikas_Key
                 // New Game Button
                 //
                 newGameButton = new MiButton();
-                newGameButton.Pressed += new MiScript(
+                newGameButton.Pressed +=
                     delegate
                     {
                         Game.RemoveAllScreens();
+                        BattleScreen.Instance.LoadMap();
                         Game.PushScreen(WorldScreen.Instance);
                         return null;
-                    });
+                    };
                 newGameButtonBase = new MiAnimatingComponent(game, 733, 278, 502, 107);
 
                 //
                 // Quit Game Button
                 //
                 quitGameButton = new MiButton();
-                quitGameButton.Pressed += new MiScript(
+                quitGameButton.Pressed +=
                     delegate
                     {
                         Game.Exit();
                         return null;
-                    });
+                    };
                 quitGameButtonBase = new MiAnimatingComponent(game, 750, 418, 488, 127, 0, 0, 0, 0);
 
                 //
@@ -63,9 +64,9 @@ namespace Laikas_Key
                 //
                 // Reponses to Input
                 //
-                inputResponses[Controller.UP] = new MiScript(Upped);
-                inputResponses[Controller.DOWN] = new MiScript(Downed);
-                inputResponses[Controller.A] = new MiScript(Pressed);
+                inputResponses[Controller.UP] = Upped;
+                inputResponses[Controller.DOWN] = Downed;
+                inputResponses[Controller.A] = Pressed;
             }
             else
             {

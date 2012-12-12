@@ -6,6 +6,7 @@ using MiUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using Choice = System.Collections.Generic.KeyValuePair<string, MiUtil.MiScript>;
 namespace Laikas_Key
 {
     class BattleScreen : MiScreen
@@ -48,12 +49,12 @@ namespace Laikas_Key
 
                 flash = new MiAnimatingComponent(Game, 0, 0, 1280, 800, 0, 0, 0, 0);
                 this.tileEngine = tileEngine;
-                inputResponses[Controller.START] = new MiScript(Escaped);
-                inputResponses[Controller.LEFT] = new MiScript(Lefted);
-                inputResponses[Controller.RIGHT] = new MiScript(Righted);
-                inputResponses[Controller.UP] = new MiScript(Upped);
-                inputResponses[Controller.DOWN] = new MiScript(Downed);
-                inputResponses[Controller.A] = new MiScript(Pressed);
+                inputResponses[Controller.START] = Escaped;
+                inputResponses[Controller.LEFT] = Lefted;
+                inputResponses[Controller.RIGHT] = Righted;
+                inputResponses[Controller.UP] = Upped;
+                inputResponses[Controller.DOWN] = Downed;
+                inputResponses[Controller.A] = Pressed;
 
                 Character grunt1 = new Character("Grunt 1", 5, 5, 5, 5, 5);
                 Character grunt2 = new Character("Grunt 2", 5, 5, 5, 5, 5);
@@ -185,26 +186,20 @@ namespace Laikas_Key
         {
 
             flash.Update(gameTime);
-            if (Game.InputHandler.Focused == MessageScreen.Instance || Game.InputHandler.Focused == ChoiceScreen.Instance)
+            if (Game.InputHandler.Focused is MessageScreen || Game.InputHandler.Focused is ChoiceScreen)
             {
                 return;
             }
 
             if (Player.Party.Count == 0)
             {
-                ChoiceScreen.Instance.Message = "You died!";
-                ChoiceScreen.Instance.SetChoices(new KeyValuePair<string, MiScript>("Yeah Whatever...", new MiScript(Escaped)));
-                Game.PushScreen(ChoiceScreen.Instance);
-                Game.ScriptEngine.ExecuteScript(new MiScript(ChoiceScreen.Instance.EntrySequence));
+                ChoiceScreen.Show("You died!", new Choice("Yeah Whatever...", Escaped));
                 return;
             }
 
             if (enemies.Count == 0)
             {
-                ChoiceScreen.Instance.Message = "You won!";
-                ChoiceScreen.Instance.SetChoices(new KeyValuePair<string, MiScript>("Yeah Whatever...", new MiScript(Escaped)));
-                Game.PushScreen(ChoiceScreen.Instance);
-                Game.ScriptEngine.ExecuteScript(new MiScript(ChoiceScreen.Instance.EntrySequence));
+                ChoiceScreen.Show("You won!", new Choice("Yeah Whatever...", Escaped));
                 return;
             }
 
@@ -213,9 +208,7 @@ namespace Laikas_Key
                 case BattleState.NOTIF:
                     if (setupIndex < Player.Party.Count)
                     {
-                        MessageScreen.Instance.Message = "Select Location for " + Player.Party[setupIndex].Name;
-                        Game.PushScreen(MessageScreen.Instance);
-                        Game.ScriptEngine.ExecuteScript(new MiScript(MessageScreen.Instance.EntrySequence));
+                        MessageScreen.Show("Select Location for " + Player.Party[setupIndex].Name);
                         for (int row = 0; row < tileEngine.MapGraphics.GetLength(0); row++)
                         {
                             for (int col = 0; col < ALLOWED_INITIAL_REGION; col++)
@@ -239,24 +232,21 @@ namespace Laikas_Key
                             }
                             colorChanged = false;
                         }
-                        ChoiceScreen.Instance.Message = "What to do?";
-                        ChoiceScreen.Instance.SetChoices(
-                            new KeyValuePair<string, MiScript>("Fight",
+                        ChoiceScreen.Show("What to do?",
+                            new Choice("Fight",
                                 delegate
                                 {
                                     state = BattleState.CHARACTER_SELECT;
-                                    return ChoiceScreen.Instance.ExitSequence();
+                                    return null;
                                 }),
-                            new KeyValuePair<string, MiScript>("End Turn",
+                            new Choice("End Turn",
                                 delegate
                                 {
                                     state = BattleState.ENEMY_TURN;
-                                    Game.ScriptEngine.ExecuteScript(new MiScript(EnemyTurn));
-                                    return ChoiceScreen.Instance.ExitSequence();
+                                    Game.ScriptEngine.ExecuteScript(EnemyTurn);
+                                    return null;
                                 }),
-                            new KeyValuePair<string, MiScript>("Run", new MiScript(ExitSequence)));
-                        Game.PushScreen(ChoiceScreen.Instance);
-                        Game.ScriptEngine.ExecuteScript(ChoiceScreen.Instance.EntrySequence);
+                            new Choice("Run", ExitSequence));
                     }
                     break;
             }
@@ -266,10 +256,8 @@ namespace Laikas_Key
 
         public override IEnumerator<ulong> EntrySequence()
         {
-            MessageScreen.Instance.Message = "Setup Phase";
-            Game.PushScreen(MessageScreen.Instance);
-            Game.ScriptEngine.ExecuteScript(MessageScreen.Instance.EntrySequence);
-            while (Game.InputHandler.Focused == MessageScreen.Instance)
+            MessageScreen.Show("Setup Phase");
+            while (Game.InputHandler.Focused is MessageScreen)
             {
                 yield return 5;
             }
@@ -439,10 +427,8 @@ namespace Laikas_Key
                     }
                     else
                     {
-                        MessageScreen.Instance.Message = "You can't use that position.";
-                        Game.PushScreen(MessageScreen.Instance);
-                        Game.ScriptEngine.ExecuteScript(new MiScript(MessageScreen.Instance.EntrySequence));
-                        while (Game.InputHandler.Focused == MessageScreen.Instance)
+                        MessageScreen.Show("You can't use that position.");
+                        while (Game.InputHandler.Focused is MessageScreen)
                         {
                             yield return 5;
                         }
@@ -455,34 +441,27 @@ namespace Laikas_Key
                         {
                             if (c.CurrMovementPoints <= 0)
                             {
-                                MessageScreen.Instance.Message = c.Name + " has no movement points left and can't do anymore actions.";
-                                Game.PushScreen(MessageScreen.Instance);
-                                Game.ScriptEngine.ExecuteScript(new MiScript(MessageScreen.Instance.EntrySequence));
+                                MessageScreen.Show(c.Name + " has no movement points left and can't do anymore actions.");
                             }
                             else
                             {
                                 selectedCharacter = c;
-                                ChoiceScreen.Instance.Message = "What will " + c.Name + " do with his remaining " + c.CurrMovementPoints + " movement points?";
-                                ChoiceScreen.Instance.SetChoices(
-                                    new KeyValuePair<string, MiScript>("Attack",
+                                ChoiceScreen.Show("What will " + c.Name + " do with his remaining " + c.CurrMovementPoints + " movement points?",
+                                    new Choice("Attack",
                                         delegate
                                         {
-                                            Game.PopScreen();
                                             selectedCharacterX = cursorX;
                                             selectedCharacterY = cursorY;
-                                            ChoiceScreen.Instance.Message = "Which Attack?";
                                             KeyValuePair<string, MiScript>[] attacks = new KeyValuePair<string, MiScript>[c.KnownAttacks.Count+1];
                                             for (int i = 0; i < c.KnownAttacks.Count; i++)
                                             {
                                                 Attack curr = c.KnownAttacks[i];
-                                                attacks[i] = new KeyValuePair<string,MiScript>(curr.Name,new MiScript(
+                                                attacks[i] = new Choice(curr.Name,
                                                     delegate
                                                     {
                                                         if (c.CurrMovementPoints < curr.MovementCost)
                                                         {
-                                                            MessageScreen.Instance.Message = c.Name + " does not have enough movement points for that.";
-                                                            Game.PushScreen(MessageScreen.Instance);
-                                                            return MessageScreen.Instance.EntrySequence();
+                                                            MessageScreen.Show(c.Name + " does not have enough movement points for that.");
                                                         }
                                                         else
                                                         {
@@ -492,16 +471,15 @@ namespace Laikas_Key
                                                             MapFloodFill(cursorX, cursorY, selectedAttack.AOE, true, Color.Salmon, selectedAOE);
                                                             positions[c] = new Point(cursorX, cursorY);
                                                             state = BattleState.CHARACTER_ATTACK;
-                                                            return ChoiceScreen.Instance.ExitSequence();
                                                         }
-                                                    }));
+                                                        return null;
+                                                    });
                                             }
-                                            attacks[attacks.Length - 1] = new KeyValuePair<string, MiScript>("Nevermind", new MiScript(ChoiceScreen.Instance.ExitSequence));
-                                            ChoiceScreen.Instance.SetChoices(attacks);
-                                            Game.PushScreen(ChoiceScreen.Instance);
-                                            return ChoiceScreen.Instance.EntrySequence();
+                                            attacks[attacks.Length - 1] = new KeyValuePair<string, MiScript>("Nevermind", MiScreen.DoNothing);
+                                            ChoiceScreen.Show("Which Attack?", attacks);
+                                            return null;
                                         }),
-                                    new KeyValuePair<string, MiScript>("Move",
+                                    new Choice("Move",
                                         delegate
                                         {
                                             selectedCharacterX = cursorX;
@@ -510,11 +488,10 @@ namespace Laikas_Key
                                             MapFloodFill(cursorX, cursorY, c.CurrMovementPoints, false, Color.Yellow, selectedValidMoves);
                                             colorChanged = true;
                                             state = BattleState.CHARACTER_MOVE;
-                                            return ChoiceScreen.Instance.ExitSequence();
+                                            return null;
                                         }),
-                                    new KeyValuePair<string, MiScript>("Nevermind", new MiScript(ChoiceScreen.Instance.ExitSequence)));
-                                Game.PushScreen(ChoiceScreen.Instance);
-                                Game.ScriptEngine.ExecuteScript(new MiScript(ChoiceScreen.Instance.EntrySequence));
+                                    new Choice("Nevermind", MiScreen.DoNothing)
+                                );
                             }
                             break;
                         }
@@ -531,10 +508,8 @@ namespace Laikas_Key
                     }
                     else
                     {
-                        MessageScreen.Instance.Message = "You can't choose that position";
-                        Game.PushScreen(MessageScreen.Instance);
-                        Game.ScriptEngine.ExecuteScript(new MiScript(MessageScreen.Instance.EntrySequence));
-                        while (Game.InputHandler.Focused == MessageScreen.Instance)
+                        MessageScreen.Show("You can't choose that position");
+                        while (Game.InputHandler.Focused is MessageScreen)
                         {
                             yield return 5;
                         }
@@ -574,15 +549,13 @@ namespace Laikas_Key
                         colorChanged = true;
                         selectedValidMoves.Clear();
                         selectedAOE.Clear();
-                        Game.ScriptEngine.ExecuteScript(new MiScript(Flash));
+                        Game.ScriptEngine.ExecuteScript(Flash);
                         state = BattleState.NOTIF;
                     }
                     else
                     {
-                        MessageScreen.Instance.Message = "Target out of range.";
-                        Game.PushScreen(MessageScreen.Instance);
-                        Game.ScriptEngine.ExecuteScript(new MiScript(MessageScreen.Instance.EntrySequence));
-                        while (Game.InputHandler.Focused == MessageScreen.Instance)
+                        MessageScreen.Show("Target out of range.");
+                        while (Game.InputHandler.Focused is MessageScreen)
                         {
                             yield return 5;
                         }

@@ -48,7 +48,7 @@ namespace Laikas_Key
             // Set active screen
             PushScreen(StartScreen.Instance);
 
-            ScriptEngine.ExecuteScript(new MiScript(StartScreen.Instance.EntrySequence));
+            ScriptEngine.ExecuteScript(StartScreen.Instance.EntrySequence);
             base.Initialize();
         }
 

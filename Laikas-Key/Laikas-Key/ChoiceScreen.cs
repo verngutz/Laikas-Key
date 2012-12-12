@@ -13,7 +13,6 @@ namespace Laikas_Key
         public static ChoiceScreen Instance { get; set; }
 
         private string message;
-        public string Message { set { message = value; } }
 
         private KeyValuePair<string, MiScript>[] choices;
         private int activeChoice;
@@ -32,10 +31,10 @@ namespace Laikas_Key
                 activeChoice = 0;
                 background = new MiAnimatingComponent(game, 0, 600, MiResolution.VirtualWidth, MiResolution.VirtualHeight - 600, 0, 0, 0, 0);
                 cursor = new MiAnimatingComponent(game, 25, 0, 50, 20);
-                inputResponses[Controller.A] = new MiScript(Pressed);
-                inputResponses[Controller.UP] = new MiScript(Upped);
-                inputResponses[Controller.DOWN] = new MiScript(Downed);
-                inputResponses[Controller.START] = new MiScript(
+                inputResponses[Controller.A] = Pressed;
+                inputResponses[Controller.UP] = Upped;
+                inputResponses[Controller.DOWN] = Downed;
+                inputResponses[Controller.START] = 
                     delegate
                     {
                         if(Game.ContainsScreen(BattleScreen.Instance) && BattleScreen.Instance.State == BattleScreen.BattleState.NOTIF && BattleScreen.Instance.SetupIndex >= Player.Party.Count)
@@ -43,7 +42,7 @@ namespace Laikas_Key
                             BattleScreen.Instance.Undo();
                         }
                         return null;
-                    });
+                    };
                 entryExitMutex = false;
             }
             else
@@ -83,7 +82,7 @@ namespace Laikas_Key
                 yield break;
 
             entryExitMutex = true;
-            background.AlphaOverTime.Keys.Add(new CurveKey(background.AlphaChangeTimer + 30, 255));
+            background.SetAlpha(255, 30);
             background.AlphaChangeEnabled = true;
             yield return 30;
             background.AlphaChangeEnabled = false;
@@ -96,7 +95,7 @@ namespace Laikas_Key
                 yield break;
 
             entryExitMutex = true;
-            background.AlphaOverTime.Keys.Add(new CurveKey(background.AlphaChangeTimer + 30, 0));
+            background.SetAlpha(0, 30);
             background.AlphaChangeEnabled = true;
             yield return 30;
             background.AlphaChangeEnabled = false;
@@ -126,15 +125,23 @@ namespace Laikas_Key
 
         public IEnumerator<ulong> Pressed()
         {
+            IEnumerator<ulong> exit = ExitSequence();
+            do
+            {
+                yield return exit.Current;
+            } while (exit.MoveNext());
             Game.ScriptEngine.ExecuteScript(choices[activeChoice].Value);
             yield break;
         }
 
-        public void SetChoices(params KeyValuePair<string, MiScript>[] choices)
+        public static void Show(string message, params KeyValuePair<string, MiScript>[] choices)
         {
-            this.choices = choices;
-            activeChoice = 0;
-            cursor.Position = new Point(25, 685);
+            Instance.message = message;
+            Instance.choices = choices;
+            Instance.activeChoice = 0;
+            Instance.cursor.Position = new Point(25, 685);
+            Instance.Game.PushScreen(Instance);
+            Instance.Game.ScriptEngine.ExecuteScript(Instance.EntrySequence);
         }
     }
 }

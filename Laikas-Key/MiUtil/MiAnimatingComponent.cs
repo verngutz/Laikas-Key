@@ -193,5 +193,22 @@ namespace MiUtil
         {
             Game.SpriteBatch.Draw(spriteQueue[SpriteState].Peek().Key, boundingRectangle, null, Color, rotation, origin, SpriteEffects.None, 0);
         }
+
+        public void SetPosition(int x, int y, uint dt)
+        {
+            XPositionOverTime.Keys.Add(new CurveKey(MoveTimer + dt, x));
+            YPositionOverTime.Keys.Add(new CurveKey(MoveTimer + dt, y));
+        }
+
+        public void SetMovement(int dx, int dy, uint dt)
+        {
+            XPositionOverTime.Keys.Add(new CurveKey(MoveTimer + dt, Position.X + dx));
+            YPositionOverTime.Keys.Add(new CurveKey(MoveTimer + dt, Position.Y + dy));
+        }
+
+        public void SetAlpha(int A, uint dt)
+        {
+            AlphaOverTime.Keys.Add(new CurveKey(AlphaChangeTimer + dt, A));
+        }
     }
 }

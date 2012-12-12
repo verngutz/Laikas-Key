@@ -6,7 +6,6 @@ namespace MiUtil
 {
     public abstract class MiScreen : MiDrawableComponent
     {
-        private static readonly MiScript DO_NOTHING = new MiScript(DoNothing);
         protected Dictionary<MiControl, MiScript> inputResponses;
 
         public MiButton ActiveButton { get; set; }
@@ -30,10 +29,10 @@ namespace MiUtil
             if (inputResponses.ContainsKey(control))
                 return inputResponses[control];
             else
-                return DO_NOTHING;
+                return DoNothing;
         }
 
-        private static IEnumerator<ulong> DoNothing()
+        protected static IEnumerator<ulong> DoNothing()
         {
             yield break;
         }

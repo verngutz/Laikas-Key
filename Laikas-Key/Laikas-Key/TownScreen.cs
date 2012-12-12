@@ -6,6 +6,7 @@ using MiUtil;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
+using Choice = System.Collections.Generic.KeyValuePair<string, MiUtil.MiScript>;
 namespace Laikas_Key
 {
     class TownScreen : MiScreen
@@ -43,12 +44,12 @@ namespace Laikas_Key
 
                 this.tileEngine = tileEngine;
 
-                inputResponses[Controller.START] = new MiScript(Escape);
-                inputResponses[Controller.UP] = new MiScript(MoveUp);
-                inputResponses[Controller.DOWN] = new MiScript(MoveDown);
-                inputResponses[Controller.LEFT] = new MiScript(MoveLeft);
-                inputResponses[Controller.RIGHT] = new MiScript(MoveRight);
-                inputResponses[Controller.A] = new MiScript(ExamineFront);
+                inputResponses[Controller.START] = Escape;
+                inputResponses[Controller.UP] = MoveUp;
+                inputResponses[Controller.DOWN] = MoveDown;
+                inputResponses[Controller.LEFT] = MoveLeft;
+                inputResponses[Controller.RIGHT] = MoveRight;
+                inputResponses[Controller.A] = ExamineFront;
             }
             else
             {
@@ -114,8 +115,7 @@ namespace Laikas_Key
                 playerY--;
                 foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
                 {
-                    tileGraphic.YPositionOverTime.Keys.Add(new CurveKey(tileGraphic.MoveTimer + PLAYER_MOVE_SPEED, tileGraphic.Position.Y + tileEngine.TileHeight));
-                    tileGraphic.XPositionOverTime.Keys.Add(new CurveKey(tileGraphic.MoveTimer + PLAYER_MOVE_SPEED, tileGraphic.Position.X));
+                    tileGraphic.SetMovement(0, tileEngine.TileHeight, PLAYER_MOVE_SPEED);
                     tileGraphic.MoveEnabled = true;
                 }
                 yield return PLAYER_MOVE_SPEED;
@@ -142,8 +142,7 @@ namespace Laikas_Key
                 playerY++;
                 foreach(MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
                 {
-                    tileGraphic.YPositionOverTime.Keys.Add(new CurveKey(tileGraphic.MoveTimer + PLAYER_MOVE_SPEED, tileGraphic.Position.Y - tileEngine.TileHeight));
-                    tileGraphic.XPositionOverTime.Keys.Add(new CurveKey(tileGraphic.MoveTimer + PLAYER_MOVE_SPEED, tileGraphic.Position.X));
+                    tileGraphic.SetMovement(0, -tileEngine.TileHeight, PLAYER_MOVE_SPEED);
                     tileGraphic.MoveEnabled = true;
                 }
                 yield return PLAYER_MOVE_SPEED;
@@ -170,8 +169,7 @@ namespace Laikas_Key
                 playerX--;
                 foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
                 {
-                    tileGraphic.XPositionOverTime.Keys.Add(new CurveKey(tileGraphic.MoveTimer + PLAYER_MOVE_SPEED, tileGraphic.Position.X + tileEngine.TileWidth));
-                    tileGraphic.YPositionOverTime.Keys.Add(new CurveKey(tileGraphic.MoveTimer + PLAYER_MOVE_SPEED, tileGraphic.Position.Y));
+                    tileGraphic.SetMovement(tileEngine.TileWidth, 0, PLAYER_MOVE_SPEED);
                     tileGraphic.MoveEnabled = true;
                 }
                 yield return PLAYER_MOVE_SPEED;
@@ -198,8 +196,7 @@ namespace Laikas_Key
                 playerX++;
                 foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
                 {
-                    tileGraphic.XPositionOverTime.Keys.Add(new CurveKey(tileGraphic.MoveTimer + PLAYER_MOVE_SPEED, tileGraphic.Position.X - tileEngine.TileWidth));
-                    tileGraphic.YPositionOverTime.Keys.Add(new CurveKey(tileGraphic.MoveTimer + PLAYER_MOVE_SPEED, tileGraphic.Position.Y));
+                    tileGraphic.SetMovement(-tileEngine.TileWidth, 0, PLAYER_MOVE_SPEED);
                     tileGraphic.MoveEnabled = true;
                 }
                 yield return PLAYER_MOVE_SPEED;
@@ -218,78 +215,57 @@ namespace Laikas_Key
         {
             if (playerFrontX == 3 && playerFrontY == 3)
             {
-                ChoiceScreen.Instance.Message = "Choose your fate.";
-                ChoiceScreen.Instance.SetChoices(
-                    new KeyValuePair<string, MiScript>("Traditionalist", new MiScript(
-                        delegate 
-                        {
-                            Game.PopScreen();
-                            MessageScreen.Instance.Message = "Your backwardness is preventing equality for all.";
-                            Game.PushScreen(MessageScreen.Instance);
-                            return MessageScreen.Instance.EntrySequence();
-                        })),
-                    new KeyValuePair<string, MiScript>("Futurist", new MiScript(
+                ChoiceScreen.Show("Choose your fate.",
+                    new Choice("Traditionalist",
                         delegate
                         {
-                            Game.PopScreen();
-                            MessageScreen.Instance.Message = "Your technology is destroying the earth.";
-                            Game.PushScreen(MessageScreen.Instance);
-                            return MessageScreen.Instance.EntrySequence();
-                        }))
+                            MessageScreen.Show("Your backwardness is preventing equality for all.");
+                            return null;
+                        }),
+                    new Choice("Futurist",
+                        delegate
+                        {
+                            MessageScreen.Show("Your technology is destroying the earth.");
+                            return null;
+                        })
                 );
-
-                Game.PushScreen(ChoiceScreen.Instance);
-                return ChoiceScreen.Instance.EntrySequence();
             }
             else if (playerFrontX == 5 && playerFrontY == 1)
             {
-                ChoiceScreen.Instance.Message = "Would you like to know more about the war?";
-                ChoiceScreen.Instance.SetChoices(
-                    new KeyValuePair<string, MiScript>("Yes", new MiScript(
+                ChoiceScreen.Show("Would you like to know more about the war?",
+                    new Choice("Yes",
                         delegate
                         {
-                            Game.PopScreen();
-                            MessageScreen.Instance.Message = "This war is rooted in the differences of Traditionalists and Futurists.";
-                            Game.PushScreen(MessageScreen.Instance);
-                            return MessageScreen.Instance.EntrySequence();
-                        })),
-                    new KeyValuePair<string, MiScript>("No", new MiScript(
+                            MessageScreen.Show("This war is rooted in the differences of Traditionalists and Futurists.");
+                            return null;
+                        }),
+                    new Choice("No",
                         delegate
                         {
-                            Game.PopScreen();
-                            MessageScreen.Instance.Message = "You don't really care do you?";
-                            Game.PushScreen(MessageScreen.Instance);
-                            return MessageScreen.Instance.EntrySequence();
-                        }))
+                            MessageScreen.Show("You don't really care do you?");
+                            return null;
+                        })
                 );
-
-                Game.PushScreen(ChoiceScreen.Instance);
-                return ChoiceScreen.Instance.EntrySequence();
             }
             else if (playerFrontX == 5 && playerFrontY == 5)
             {
-                ChoiceScreen.Instance.Message = "Would you rather fight or flee?";
-                ChoiceScreen.Instance.SetChoices(
-                    new KeyValuePair<string, MiScript>("Fight", new MiScript(
+                MessageScreen.Show("Test");
+                /**
+                ChoiceScreen.Show("Would you rather fight or flee?",
+                    new Choice("Fight",
                         delegate
                         {
-                            Game.PopScreen();
-                            MessageScreen.Instance.Message = "Careful, don't forget about your team";
-                            Game.PushScreen(MessageScreen.Instance);
-                            return MessageScreen.Instance.EntrySequence();
-                        })),
-                    new KeyValuePair<string, MiScript>("Flee", new MiScript(
+                            MessageScreen.Show("Careful, don't forget about your team");
+                            return null;
+                        }),
+                    new Choice("Flee",
                         delegate
                         {
-                            Game.PopScreen();
-                            MessageScreen.Instance.Message = "You can't always run...";
-                            Game.PushScreen(MessageScreen.Instance);
-                            return MessageScreen.Instance.EntrySequence();
-                        }))
+                            MessageScreen.Show("You can't always run...");
+                            return null;
+                        })
                 );
-
-                Game.PushScreen(ChoiceScreen.Instance);
-                return ChoiceScreen.Instance.EntrySequence();
+                 */
             }
             return null;
         }

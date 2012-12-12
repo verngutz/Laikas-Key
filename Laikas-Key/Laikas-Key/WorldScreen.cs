@@ -105,12 +105,12 @@ namespace Laikas_Key
                 //
                 // Responses to Input
                 //
-                inputResponses[Controller.UP] = new MiScript(Upped);
-                inputResponses[Controller.DOWN] = new MiScript(Downed);
-                inputResponses[Controller.LEFT] = new MiScript(Lefted);
-                inputResponses[Controller.RIGHT] = new MiScript(Righted);
-                inputResponses[Controller.A] = new MiScript(EnterLocation);
-                inputResponses[Controller.START] = new MiScript(Escape);
+                inputResponses[Controller.UP] = Upped;
+                inputResponses[Controller.DOWN] = Downed;
+                inputResponses[Controller.LEFT] = Lefted;
+                inputResponses[Controller.RIGHT] = Righted;
+                inputResponses[Controller.A] = EnterLocation;
+                inputResponses[Controller.START] = Escape;
             }
             else
             {
@@ -195,7 +195,7 @@ namespace Laikas_Key
                 case Location.State.ENEMY:
                     BattleScreen.Instance.LoadMap();
                     Game.PushScreen(BattleScreen.Instance);
-                    Game.ScriptEngine.ExecuteScript(new MiScript(BattleScreen.Instance.EntrySequence));
+                    Game.ScriptEngine.ExecuteScript(BattleScreen.Instance.EntrySequence);
                     break;
             }
             yield break;

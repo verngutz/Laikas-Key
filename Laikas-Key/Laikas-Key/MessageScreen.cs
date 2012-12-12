@@ -10,11 +10,11 @@ namespace Laikas_Key
 {
     class MessageScreen : MiScreen
     {
+        private const int HEIGHT = 600;
+
         public static MessageScreen Instance { get; set; }
 
         private string message;
-        public string Message { set { message = value; } }
-
         private MiAnimatingComponent background;
         private bool entryExitMutex;
 
@@ -23,14 +23,21 @@ namespace Laikas_Key
         {
             if (Instance == null)
             {
-                background = new MiAnimatingComponent(game, 0, 600, MiResolution.VirtualWidth, MiResolution.VirtualHeight - 600, 0, 0, 0, 0);
-                inputResponses[Controller.A] = new MiScript(ExitSequence);
+                background = new MiAnimatingComponent(game, 0, HEIGHT, MiResolution.VirtualWidth, MiResolution.VirtualHeight - HEIGHT, 0, 0, 0, 0);
+                inputResponses[Controller.A] = ExitSequence;
                 entryExitMutex = false;
             }
             else
             {
                 throw new Exception("Dialog Screen Already Initialized");
             }
+        }
+
+        public static void Show(string message)
+        {
+            Instance.message = message;
+            Instance.Game.PushScreen(Instance);
+            Instance.Game.ScriptEngine.ExecuteScript(Instance.EntrySequence);
         }
 
         public override void LoadContent()
@@ -55,7 +62,7 @@ namespace Laikas_Key
                 yield break;
 
             entryExitMutex = true;
-            background.AlphaOverTime.Keys.Add(new CurveKey(background.AlphaChangeTimer + 30, 255));
+            background.SetAlpha(255, 30);
             background.AlphaChangeEnabled = true;
             yield return 30;
             background.AlphaChangeEnabled = false;
@@ -68,7 +75,7 @@ namespace Laikas_Key
                 yield break;
 
             entryExitMutex = true;
-            background.AlphaOverTime.Keys.Add(new CurveKey(background.AlphaChangeTimer + 30, 0));
+            background.SetAlpha(0, 30);
             background.AlphaChangeEnabled = true;
             yield return 30;
             background.AlphaChangeEnabled = false;
