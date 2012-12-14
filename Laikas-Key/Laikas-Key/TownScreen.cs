@@ -18,13 +18,12 @@ namespace Laikas_Key
 
         private int playerX;
         private int playerY;
-        private int playerFrontX;
-        private int playerFrontY;
+        private Point playerFront;
+        private bool playerMoveMutex;
         private const int PLAYER_MOVE_SPEED = 25;
 
         private MiTileEngine tileEngine;
-
-        private bool playerMoveMutex;
+        private Dictionary<Point, MiScript> events;
 
         public TownScreen(MiGame game, MiTileEngine tileEngine)
             : base(game)
@@ -60,20 +59,20 @@ namespace Laikas_Key
             switch (l.TownEntryDirection)
             {
                 case AvatarDirection.UP:
-                    playerFrontX = playerX;
-                    playerFrontY = playerY - 1;
+                    playerFront.X = playerX;
+                    playerFront.Y = playerY - 1;
                     break;
                 case AvatarDirection.DOWN:
-                    playerFrontX = playerX;
-                    playerFrontY = playerY + 1;
+                    playerFront.X = playerX;
+                    playerFront.Y = playerY + 1;
                     break;
                 case AvatarDirection.LEFT:
-                    playerFrontX = playerX - 1;
-                    playerFrontY = playerY;
+                    playerFront.X = playerX - 1;
+                    playerFront.Y = playerY;
                     break;
                 case AvatarDirection.RIGHT:
-                    playerFrontX = playerX + 1;
-                    playerFrontY = playerY;
+                    playerFront.X = playerX + 1;
+                    playerFront.Y = playerY;
                     break;
             }
 
@@ -83,6 +82,8 @@ namespace Laikas_Key
             );
 
             playerAvatar.BoundingRectangle = tileEngine.BoundingRectangle(playerX, playerY);
+
+            events = l.Events;
             Game.PushScreen(this);
             Game.ScriptEngine.ExecuteScript(EntrySequence);
         }
@@ -135,8 +136,8 @@ namespace Laikas_Key
                 }
                 playerMoveMutex = false;
             }
-            playerFrontX = playerX;
-            playerFrontY = playerY - 1;
+            playerFront.X = playerX;
+            playerFront.Y = playerY - 1;
             yield break;
         }
 
@@ -162,8 +163,8 @@ namespace Laikas_Key
                 }
                 playerMoveMutex = false;
             }
-            playerFrontX = playerX;
-            playerFrontY = playerY + 1;
+            playerFront.X = playerX;
+            playerFront.Y = playerY + 1;
             yield break;
         }
 
@@ -189,8 +190,8 @@ namespace Laikas_Key
                 }
                 playerMoveMutex = false;
             }
-            playerFrontY = playerY;
-            playerFrontX = playerX - 1;
+            playerFront.Y = playerY;
+            playerFront.X = playerX - 1;
             yield break;
         }
 
@@ -216,63 +217,16 @@ namespace Laikas_Key
                 }
                 playerMoveMutex = false;
             }
-            playerFrontY = playerY;
-            playerFrontX = playerX + 1;
+            playerFront.Y = playerY;
+            playerFront.X = playerX + 1;
             yield break;
         }
 
         public IEnumerator<ulong> ExamineFront()
         {
-            if (playerFrontX == 3 && playerFrontY == 3)
+            if (events.ContainsKey(playerFront))
             {
-                ChoiceScreen.Show("Choose your fate.",
-                    new Choice("Traditionalist",
-                        delegate
-                        {
-                            MessageScreen.Show("Your backwardness is preventing equality for all.");
-                            return null;
-                        }),
-                    new Choice("Futurist",
-                        delegate
-                        {
-                            MessageScreen.Show("Your technology is destroying the earth.");
-                            return null;
-                        })
-                );
-            }
-            else if (playerFrontX == 5 && playerFrontY == 1)
-            {
-                ChoiceScreen.Show("Would you like to know more about the war?",
-                    new Choice("Yes",
-                        delegate
-                        {
-                            MessageScreen.Show("This war is rooted in the differences of Traditionalists and Futurists.");
-                            return null;
-                        }),
-                    new Choice("No",
-                        delegate
-                        {
-                            MessageScreen.Show("You don't really care do you?");
-                            return null;
-                        })
-                );
-            }
-            else if (playerFrontX == 5 && playerFrontY == 5)
-            {
-                ChoiceScreen.Show("Would you rather fight or flee?",
-                    new Choice("Fight",
-                        delegate
-                        {
-                            MessageScreen.Show("Careful, don't forget about your team");
-                            return null;
-                        }),
-                    new Choice("Flee",
-                        delegate
-                        {
-                            MessageScreen.Show("You can't always run...");
-                            return null;
-                        })
-                );
+                Game.ScriptEngine.ExecuteScript(events[playerFront]);
             }
             return null;
         }
