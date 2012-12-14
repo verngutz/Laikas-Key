@@ -11,7 +11,7 @@ namespace Laikas_Key
     class WorldScreen : MiScreen
     {
         public static WorldScreen Instance { set; get; }
-
+        
         private class LocationUI
         {
             private MiGame game;
@@ -23,11 +23,11 @@ namespace Laikas_Key
                 {
                     switch (location.ControllingFaction)
                     {
-                        case Location.State.ALLY:
+                        case LocationData.State.ALLY:
                             return allyButtonBase;
-                        case Location.State.ENEMY:
+                        case LocationData.State.ENEMY:
                             return enemyButtonBase;
-                        case Location.State.NEUTRAL:
+                        case LocationData.State.NEUTRAL:
                             return neutralButtonBase;
                     }
                     return null;
@@ -38,11 +38,12 @@ namespace Laikas_Key
             private MiAnimatingComponent enemyButtonBase;
             private MiAnimatingComponent neutralButtonBase;
 
-            private Location location;
+            private LocationData location;
+            public LocationData LocationData { get { return location; } }
             public string Label { get { return location.Name; } }
-            public Location.State ControllingFaction { get { return location.ControllingFaction; } }
+            public LocationData.State ControllingFaction { get { return location.ControllingFaction; } }
 
-            public LocationUI(MiGame game, int x, int y, int width, int height, Location location)
+            public LocationUI(MiGame game, int x, int y, int width, int height, LocationData location)
             {
                 this.game = game;
                 Neighbors = new Dictionary<MiControl, LocationUI>();
@@ -75,10 +76,10 @@ namespace Laikas_Key
                 //
                 // Create UI for Locations
                 //
-                LocationUI test_1 = new LocationUI(game, 650, 250, 128, 128, Location.TEST_1);
-                LocationUI test_2 = new LocationUI(game, 450, 450, 128, 128, Location.TEST_2);
+                LocationUI test_1 = new LocationUI(game, 650, 250, 128, 128, LocationData.TEST_1);
+                LocationUI test_2 = new LocationUI(game, 450, 450, 128, 128, LocationData.TEST_2);
 
-                Location.TEST_1.ControllingFaction = Location.State.ENEMY;
+                LocationData.TEST_1.ControllingFaction = LocationData.State.ENEMY;
 
                 //
                 // Add Neighbors
@@ -188,14 +189,11 @@ namespace Laikas_Key
             Game.RemoveAllScreens();
             switch (activeLocation.ControllingFaction)
             {
-                case Location.State.ALLY:
-                    TownScreen.Instance.LoadMap();
-                    Game.PushScreen(TownScreen.Instance);
+                case LocationData.State.ALLY:
+                    TownScreen.Instance.Activate(activeLocation.LocationData);
                     break;
-                case Location.State.ENEMY:
-                    BattleScreen.Instance.LoadMap();
-                    Game.PushScreen(BattleScreen.Instance);
-                    Game.ScriptEngine.ExecuteScript(BattleScreen.Instance.EntrySequence);
+                case LocationData.State.ENEMY:
+                    BattleScreen.Instance.Activate(activeLocation.LocationData);
                     break;
             }
             yield break;
@@ -206,6 +204,12 @@ namespace Laikas_Key
             Game.RemoveAllScreens();
             Game.PushScreen(StartScreen.Instance);
             yield break;
+        }
+
+        public static void Activate()
+        {
+            Instance.Game.RemoveAllScreens();
+            Instance.Game.PushScreen(Instance);
         }
     }
 }

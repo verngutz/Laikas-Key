@@ -37,9 +37,7 @@ namespace Laikas_Key
                 newGameButton.Pressed +=
                     delegate
                     {
-                        Game.RemoveAllScreens();
-                        BattleScreen.Instance.LoadMap();
-                        Game.PushScreen(WorldScreen.Instance);
+                        WorldScreen.Activate();
                         return null;
                     };
                 newGameButtonBase = new MiAnimatingComponent(game, 733, 278, 502, 107);

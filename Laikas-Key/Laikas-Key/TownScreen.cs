@@ -13,7 +13,7 @@ namespace Laikas_Key
     {
         public static TownScreen Instance { set; get; }
 
-        private enum AvatarDirection { UP, DOWN, LEFT, RIGHT }
+        public enum AvatarDirection { UP, DOWN, LEFT, RIGHT }
         private MiAnimatingComponent playerAvatar;
 
         private int playerX;
@@ -34,12 +34,7 @@ namespace Laikas_Key
                 //
                 // Player Avatar
                 //
-                playerX = 1;
-                playerY = 1;
-                playerFrontX = 1;
-                playerFrontY = 2;
                 playerAvatar = new MiAnimatingComponent(Game, 0, 0, tileEngine.TileWidth, tileEngine.TileHeight);
-                playerAvatar.SpriteState = AvatarDirection.DOWN;
                 playerMoveMutex = false;
 
                 this.tileEngine = tileEngine;
@@ -57,24 +52,39 @@ namespace Laikas_Key
             }
         }
 
-        public void LoadMap()
+        public void Activate(LocationData l)
         {
-            tileEngine.LoadMap(
-                new char[,]
-                {
-                    {'r', 'r', 'r', 'r', 'r', 'r', 'r'},
-                    {'r', 'g', 'g', 'g', 'g', 'w', 'r'},
-                    {'r', 'g', 'r', 'r', 'g', 'g', 'r'},
-                    {'r', 'g', 'g', 't', 'r', 'g', 'r'},
-                    {'r', 'g', 'r', 'g', 'r', 'g', 'r'},
-                    {'r', 'g', 'r', 'g', 'g', 'q', 'r'},
-                    {'r', 'r', 'r', 'r', 'r', 'r', 'r'}
-                },
+            playerX = l.TownEntryX;
+            playerY = l.TownEntryY;
+            playerAvatar.SpriteState = l.TownEntryDirection;
+            switch (l.TownEntryDirection)
+            {
+                case AvatarDirection.UP:
+                    playerFrontX = playerX;
+                    playerFrontY = playerY - 1;
+                    break;
+                case AvatarDirection.DOWN:
+                    playerFrontX = playerX;
+                    playerFrontY = playerY + 1;
+                    break;
+                case AvatarDirection.LEFT:
+                    playerFrontX = playerX - 1;
+                    playerFrontY = playerY;
+                    break;
+                case AvatarDirection.RIGHT:
+                    playerFrontX = playerX + 1;
+                    playerFrontY = playerY;
+                    break;
+            }
+
+            tileEngine.LoadMap(l.Map,
                 MiResolution.VirtualWidth / 2 - playerAvatar.Width / 2 - playerX * playerAvatar.Width, 
                 MiResolution.VirtualHeight / 2 - playerAvatar.Height / 2 - playerY * playerAvatar.Height
             );
 
             playerAvatar.BoundingRectangle = tileEngine.BoundingRectangle(playerX, playerY);
+            Game.PushScreen(this);
+            Game.ScriptEngine.ExecuteScript(EntrySequence);
         }
 
         public override void LoadContent()

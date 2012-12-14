@@ -37,6 +37,9 @@ namespace Laikas_Key
             tileEngine.AddTileType('q', "Town View\\Carpet_WA", false);
             tileEngine.AddTileType('h', "Town View\\TownFloor_v2", true);
 
+            // Initialize Location Data
+            LocationData.Init();
+
             // Initialize screens
             StartScreen.Instance = new StartScreen(this);
             WorldScreen.Instance = new WorldScreen(this);

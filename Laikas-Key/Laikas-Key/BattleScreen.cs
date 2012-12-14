@@ -99,21 +99,11 @@ namespace Laikas_Key
             }
         }
 
-        public void LoadMap()
+        public void Activate(LocationData l)
         {
-            tileEngine.LoadMap(
-                new char[,]
-                {
-                    {'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h'},
-                    {'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h'},
-                    {'h', 'h', 'h', 'h', 'r', 'h', 'h', 'r', 'h', 'r', 'r', 'h'},
-                    {'h', 'h', 'r', 'r', 'r', 'h', 'h', 'r', 'h', 'h', 'r', 'h'},
-                    {'h', 'r', 'r', 'h', 'h', 'h', 'h', 'r', 'h', 'h', 'r', 'h'},
-                    {'h', 'h', 'r', 'r', 'r', 'h', 'h', 'r', 'h', 'h', 'h', 'h'},
-                    {'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h'},
-                },
-                50, 50
-            );
+            tileEngine.LoadMap(l.Map, 50, 50);
+            Game.PushScreen(this);
+            Game.ScriptEngine.ExecuteScript(EntrySequence);
         }
 
         public override void LoadContent()
