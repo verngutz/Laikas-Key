@@ -161,12 +161,18 @@ namespace Laikas_Key
                         Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("Town View\\GenericEnemy"), cBounds, Color.White);
                     }
                 }
+            }
+            foreach (Character c in positions.Keys)
+            {
+                Rectangle cBounds = tileEngine.BoundingRectangle(positions[c].X, positions[c].Y);
+                Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Top - 40, cBounds.Width, 20), Color.Red);
+                Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Top - 40, c.CurrHealth * cBounds.Width / c.MaxHealth, 20), Color.Green);
                 Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Top - 20, cBounds.Width, 20), Color.Brown);
-                Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Top - 20, c.CurrHealth * cBounds.Width / c.MaxHealth, 20), Color.Green);
+                Game.SpriteBatch.Draw(Game.Content.Load<Texture2D>("button"), new Rectangle(cBounds.X, cBounds.Top - 20, c.CurrMovementPoints * cBounds.Width / c.MaxMovementPoints, 20), Color.Blue);
                 Game.SpriteBatch.DrawString(
                     Game.Content.Load<SpriteFont>("Fonts\\Default"),
                     c.Name,
-                    new Vector2(tileEngine.BoundingRectangle(positions[c].X, positions[c].Y).X, tileEngine.BoundingRectangle(positions[c].X, positions[c].Y).Y - 50),
+                    new Vector2(tileEngine.BoundingRectangle(positions[c].X, positions[c].Y).X, tileEngine.BoundingRectangle(positions[c].X, positions[c].Y).Y - 40),
                     Color.White);
             }
             switch (state)

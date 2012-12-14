@@ -249,8 +249,6 @@ namespace Laikas_Key
             }
             else if (playerFrontX == 5 && playerFrontY == 5)
             {
-                MessageScreen.Show("Test");
-                /**
                 ChoiceScreen.Show("Would you rather fight or flee?",
                     new Choice("Fight",
                         delegate
@@ -265,7 +263,6 @@ namespace Laikas_Key
                             return null;
                         })
                 );
-                 */
             }
             return null;
         }
