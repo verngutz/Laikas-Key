@@ -119,6 +119,12 @@ namespace Laikas_Key
             }
         }
 
+        public void Activate()
+        {
+            Game.RemoveAllScreens();
+            Game.PushScreen(Instance);
+        }
+
         public override void LoadContent()
         {
             background.AddTexture(Game.Content.Load<Texture2D>("World View\\Map"), 0);
@@ -127,10 +133,6 @@ namespace Laikas_Key
                 locationUI.LoadContent();
             }
             cursor.AddTexture(Game.Content.Load<Texture2D>("Main Menu\\pointer"), 0);
-        }
-
-        public override void Update(GameTime gameTime)
-        {
         }
 
         public override void Draw(GameTime gameTime)
@@ -144,45 +146,10 @@ namespace Laikas_Key
             cursor.Draw(gameTime);
         }
 
-        public IEnumerator<ulong> Upped()
-        {
-            if (activeLocation.Neighbors.ContainsKey(Controller.UP))
-            {
-                activeLocation = activeLocation.Neighbors[Controller.UP];
-                cursor.Position = new Point(activeLocation.ButtonBase.Position.X - 50, activeLocation.ButtonBase.Position.Y + 30);
-            }
-            yield break;
-        }
-
-        public IEnumerator<ulong> Downed()
-        {
-            if (activeLocation.Neighbors.ContainsKey(Controller.DOWN))
-            {
-                activeLocation = activeLocation.Neighbors[Controller.DOWN];
-                cursor.Position = new Point(activeLocation.ButtonBase.Position.X - 50, activeLocation.ButtonBase.Position.Y + 30);
-            }
-            yield break;
-        }
-
-        public IEnumerator<ulong> Lefted()
-        {
-            if (activeLocation.Neighbors.ContainsKey(Controller.LEFT))
-            {
-                activeLocation = activeLocation.Neighbors[Controller.LEFT];
-                cursor.Position = activeLocation.ButtonBase.Position;
-            }
-            yield break;
-        }
-
-        public IEnumerator<ulong> Righted()
-        {
-            if (activeLocation.Neighbors.ContainsKey(Controller.RIGHT))
-            {
-                activeLocation = activeLocation.Neighbors[Controller.RIGHT];
-                cursor.Position = activeLocation.ButtonBase.Position;
-            }
-            yield break;
-        }
+        public IEnumerator<ulong> Upped() { return MoveCursor(Controller.UP); }
+        public IEnumerator<ulong> Downed() { return MoveCursor(Controller.DOWN); }
+        public IEnumerator<ulong> Lefted() { return MoveCursor(Controller.LEFT); }
+        public IEnumerator<ulong> Righted() { return MoveCursor(Controller.RIGHT); }
 
         public IEnumerator<ulong> EnterLocation()
         {
@@ -206,10 +173,14 @@ namespace Laikas_Key
             yield break;
         }
 
-        public static void Activate()
+        private IEnumerator<ulong> MoveCursor(MiControl dir)
         {
-            Instance.Game.RemoveAllScreens();
-            Instance.Game.PushScreen(Instance);
+            if (activeLocation.Neighbors.ContainsKey(dir))
+            {
+                activeLocation = activeLocation.Neighbors[dir];
+                cursor.Position = new Point(activeLocation.ButtonBase.Position.X - 50, activeLocation.ButtonBase.Position.Y + 30);
+            }
+            yield break;
         }
     }
 }

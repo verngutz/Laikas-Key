@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Laikas_Key
 {
-    class ChoiceScreen : MiScreen
+    class ChoiceScreen : DialogScreen
     {
         public static ChoiceScreen Instance { get; set; }
 

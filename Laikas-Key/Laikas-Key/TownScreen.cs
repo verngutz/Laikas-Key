@@ -19,7 +19,7 @@ namespace Laikas_Key
         private int playerX;
         private int playerY;
         private Point playerFront;
-        private bool playerMoveMutex;
+        public bool PlayerMoveEnabled { get; set; }
         private const int PLAYER_MOVE_SPEED = 25;
 
         private MiTileEngine tileEngine;
@@ -30,11 +30,8 @@ namespace Laikas_Key
         {
             if (Instance == null)
             {
-                //
-                // Player Avatar
-                //
                 playerAvatar = new MiAnimatingComponent(Game, 0, 0, tileEngine.TileWidth, tileEngine.TileHeight);
-                playerMoveMutex = false;
+                PlayerMoveEnabled = true;
 
                 this.tileEngine = tileEngine;
 
@@ -103,8 +100,27 @@ namespace Laikas_Key
 
         public override void Draw(GameTime gameTime)
         {
+            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), playerX + " " + playerY, new Vector2(20, 20), Color.White);
+            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), playerFront.ToString(), new Vector2(20, 40), Color.White);
             tileEngine.Draw(gameTime);
             playerAvatar.Draw(gameTime);
+        }
+
+        public IEnumerator<ulong> MoveUp() { return Move(AvatarDirection.UP); }
+        public IEnumerator<ulong> MoveDown() { return Move(AvatarDirection.DOWN); }
+        public IEnumerator<ulong> MoveLeft() { return Move(AvatarDirection.LEFT); }
+        public IEnumerator<ulong> MoveRight() { return Move(AvatarDirection.RIGHT); }
+
+        public IEnumerator<ulong> ExamineFront()
+        {
+            if (PlayerMoveEnabled)
+            {
+                if (events.ContainsKey(playerFront))
+                {
+                    return events[playerFront]();
+                }
+            }
+            return null;
         }
 
         public IEnumerator<ulong> Escape()
@@ -114,121 +130,73 @@ namespace Laikas_Key
             yield break;
         }
 
-        public IEnumerator<ulong> MoveUp()
+        private IEnumerator<ulong> Move(AvatarDirection dir)
         {
-            if (playerMoveMutex)
+            if (PlayerMoveEnabled)
+            {
+                PlayerMoveEnabled = false;
+                playerAvatar.SpriteState = dir;
+                int newX = playerX;
+                int newY = playerY;
+                int tileXMovement = 0;
+                int tileYMovement = 0;
+                switch (dir)
+                {
+                    case AvatarDirection.UP:
+                        newY--;
+                        tileYMovement = tileEngine.TileHeight;
+                        break;
+                    case AvatarDirection.DOWN:
+                        newY++;
+                        tileYMovement = -tileEngine.TileHeight;
+                        break;
+                    case AvatarDirection.LEFT:
+                        newX--;
+                        tileXMovement = tileEngine.TileWidth;
+                        break;
+                    case AvatarDirection.RIGHT:
+                        newX++;
+                        tileXMovement = -tileEngine.TileWidth;
+                        break;
+                }
+                if (tileEngine.MapPassability[newY, newX])
+                {
+                    playerX = newX;
+                    playerY = newY;
+                    foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
+                    {
+                        tileGraphic.SetMovement(tileXMovement, tileYMovement, PLAYER_MOVE_SPEED);
+                        tileGraphic.MoveEnabled = true;
+                    }
+                    yield return PLAYER_MOVE_SPEED;
+                    foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
+                    {
+                        tileGraphic.MoveEnabled = false;
+                    }
+                }
+                switch (dir)
+                {
+                    case AvatarDirection.UP:
+                        playerFront.X = playerX;
+                        playerFront.Y = playerY - 1;
+                        break;
+                    case AvatarDirection.DOWN:
+                        playerFront.X = playerX;
+                        playerFront.Y = playerY + 1;
+                        break;
+                    case AvatarDirection.LEFT:
+                        playerFront.X = playerX - 1;
+                        playerFront.Y = playerY;
+                        break;
+                    case AvatarDirection.RIGHT:
+                        playerFront.X = playerX + 1;
+                        playerFront.Y = playerY;
+                        break;
+                }
+                PlayerMoveEnabled = true;
                 yield break;
-
-            playerAvatar.SpriteState = AvatarDirection.UP;
-            if (tileEngine.MapPassability[playerY - 1, playerX])
-            {
-                playerMoveMutex = true;
-                playerY--;
-                foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
-                {
-                    tileGraphic.SetMovement(0, tileEngine.TileHeight, PLAYER_MOVE_SPEED);
-                    tileGraphic.MoveEnabled = true;
-                }
-                yield return PLAYER_MOVE_SPEED;
-                foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
-                {
-                    tileGraphic.MoveEnabled = false;
-                }
-                playerMoveMutex = false;
             }
-            playerFront.X = playerX;
-            playerFront.Y = playerY - 1;
             yield break;
-        }
-
-        public IEnumerator<ulong> MoveDown()
-        {
-            if (playerMoveMutex)
-                yield break;
-
-            playerAvatar.SpriteState = AvatarDirection.DOWN;
-            if (tileEngine.MapPassability[playerY + 1, playerX])
-            {
-                playerMoveMutex = true;
-                playerY++;
-                foreach(MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
-                {
-                    tileGraphic.SetMovement(0, -tileEngine.TileHeight, PLAYER_MOVE_SPEED);
-                    tileGraphic.MoveEnabled = true;
-                }
-                yield return PLAYER_MOVE_SPEED;
-                foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
-                {
-                    tileGraphic.MoveEnabled = false;
-                }
-                playerMoveMutex = false;
-            }
-            playerFront.X = playerX;
-            playerFront.Y = playerY + 1;
-            yield break;
-        }
-
-        public IEnumerator<ulong> MoveLeft()
-        {
-            if (playerMoveMutex)
-                yield break;
-
-            playerAvatar.SpriteState = AvatarDirection.LEFT;
-            if (tileEngine.MapPassability[playerY, playerX - 1])
-            {
-                playerMoveMutex = true;
-                playerX--;
-                foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
-                {
-                    tileGraphic.SetMovement(tileEngine.TileWidth, 0, PLAYER_MOVE_SPEED);
-                    tileGraphic.MoveEnabled = true;
-                }
-                yield return PLAYER_MOVE_SPEED;
-                foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
-                {
-                    tileGraphic.MoveEnabled = false;
-                }
-                playerMoveMutex = false;
-            }
-            playerFront.Y = playerY;
-            playerFront.X = playerX - 1;
-            yield break;
-        }
-
-        public IEnumerator<ulong> MoveRight()
-        {
-            if (playerMoveMutex)
-                yield break;
-
-            playerAvatar.SpriteState = AvatarDirection.RIGHT;
-            if (tileEngine.MapPassability[playerY, playerX + 1])
-            {
-                playerMoveMutex = true;
-                playerX++;
-                foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
-                {
-                    tileGraphic.SetMovement(-tileEngine.TileWidth, 0, PLAYER_MOVE_SPEED);
-                    tileGraphic.MoveEnabled = true;
-                }
-                yield return PLAYER_MOVE_SPEED;
-                foreach (MiAnimatingComponent tileGraphic in tileEngine.MapGraphics)
-                {
-                    tileGraphic.MoveEnabled = false;
-                }
-                playerMoveMutex = false;
-            }
-            playerFront.Y = playerY;
-            playerFront.X = playerX + 1;
-            yield break;
-        }
-
-        public IEnumerator<ulong> ExamineFront()
-        {
-            if (events.ContainsKey(playerFront))
-            {
-                Game.ScriptEngine.ExecuteScript(events[playerFront]);
-            }
-            return null;
         }
     }
 }

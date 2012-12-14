@@ -182,7 +182,7 @@ namespace Laikas_Key
         {
 
             flash.Update(gameTime);
-            if (Game.InputHandler.Focused is MessageScreen || Game.InputHandler.Focused is ChoiceScreen)
+            if (Game.InputHandler.Focused is DialogScreen)
             {
                 return;
             }
@@ -253,7 +253,7 @@ namespace Laikas_Key
         public override IEnumerator<ulong> EntrySequence()
         {
             MessageScreen.Show("Setup Phase");
-            while (Game.InputHandler.Focused is MessageScreen)
+            while (Game.InputHandler.Focused is DialogScreen)
             {
                 yield return 5;
             }
@@ -424,7 +424,7 @@ namespace Laikas_Key
                     else
                     {
                         MessageScreen.Show("You can't use that position.");
-                        while (Game.InputHandler.Focused is MessageScreen)
+                        while (Game.InputHandler.Focused is DialogScreen)
                         {
                             yield return 5;
                         }
@@ -505,7 +505,7 @@ namespace Laikas_Key
                     else
                     {
                         MessageScreen.Show("You can't choose that position");
-                        while (Game.InputHandler.Focused is MessageScreen)
+                        while (Game.InputHandler.Focused is DialogScreen)
                         {
                             yield return 5;
                         }
@@ -551,7 +551,7 @@ namespace Laikas_Key
                     else
                     {
                         MessageScreen.Show("Target out of range.");
-                        while (Game.InputHandler.Focused is MessageScreen)
+                        while (Game.InputHandler.Focused is DialogScreen)
                         {
                             yield return 5;
                         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MiUtil;
-using Choice = System.Collections.Generic.KeyValuePair<string, MiUtil.MiScript>;
 using Microsoft.Xna.Framework;
 namespace Laikas_Key
 {
@@ -42,63 +41,9 @@ namespace Laikas_Key
             TEST_2.townEntryX = 1;
             TEST_2.townEntryY = 1;
             TEST_2.townEntryDirection = TownScreen.AvatarDirection.DOWN;
-            TEST_2.events[new Point(3, 3)] =
-                delegate
-                {
-                    ChoiceScreen.Show("Choose your fate.",
-                       new Choice("Traditionalist",
-                           delegate
-                           {
-                               MessageScreen.Show("Your backwardness is preventing equality for all.");
-                               return null;
-                           }),
-                       new Choice("Futurist",
-                           delegate
-                           {
-                               MessageScreen.Show("Your technology is destroying the earth.");
-                               return null;
-                           })
-                        );
-                    return null;
-                };
-            TEST_2.events[new Point(5, 1)] =
-                delegate
-                {
-                    ChoiceScreen.Show("Would you like to know more about the war?",
-                        new Choice("Yes",
-                            delegate
-                            {
-                                MessageScreen.Show("This war is rooted in the differences of Traditionalists and Futurists.");
-                                return null;
-                            }),
-                        new Choice("No",
-                            delegate
-                            {
-                                MessageScreen.Show("You don't really care do you?");
-                                return null;
-                            })
-                        );
-                    return null;
-                };
-            TEST_2.events[new Point(5, 5)] =
-                delegate
-                {
-                    ChoiceScreen.Show("Would you rather fight or flee?",
-                        new Choice("Fight",
-                            delegate
-                            {
-                                MessageScreen.Show("Careful, don't forget about your team");
-                                return null;
-                            }),
-                        new Choice("Flee",
-                            delegate
-                            {
-                                MessageScreen.Show("You can't always run...");
-                                return null;
-                            })
-                        );
-                    return null;
-                };
+            TEST_2.events[new Point(3, 3)] = Scripts.ChooseYourFate;
+            TEST_2.events[new Point(5, 1)] = Scripts.AboutTheWar;
+            TEST_2.events[new Point(5, 5)] = Scripts.FightOrFlee;
             #endregion
         }
 

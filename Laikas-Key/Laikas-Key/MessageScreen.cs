@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Laikas_Key
 {
-    class MessageScreen : MiScreen
+    class MessageScreen : DialogScreen
     {
         private const int HEIGHT = 600;
 

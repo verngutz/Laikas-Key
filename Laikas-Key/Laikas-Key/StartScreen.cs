@@ -37,7 +37,7 @@ namespace Laikas_Key
                 newGameButton.Pressed +=
                     delegate
                     {
-                        WorldScreen.Activate();
+                        WorldScreen.Instance.Activate();
                         return null;
                     };
                 newGameButtonBase = new MiAnimatingComponent(game, 733, 278, 502, 107);
