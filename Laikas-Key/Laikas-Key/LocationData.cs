@@ -46,11 +46,97 @@ namespace Laikas_Key
             TEST_2.events[new Point(5, 5)] = Scripts.FightOrFlee;
             #endregion
 
+            #region TEST_3
+            TEST_3 = new LocationData();
+            TEST_3.name = "Town 3";
+            TEST_3.map = new char[,]
+            {
+                {'r', 'r', 'r', 'r', 'r', 'r', 'r'},
+                {'r', 'g', 'g', 'g', 'g', 'w', 'r'},
+                {'r', 'g', 'r', 'r', 'g', 'g', 'r'},
+                {'r', 'g', 'g', 't', 'r', 'g', 'r'},
+                {'r', 'g', 'r', 'g', 'g', 'g', 'r'},
+                {'g', 'g', 'r', 'g', 'g', 'q', 'r'},
+                {'g', 'r', 'r', 'r', 'r', 'r', 'r'}
+            };
+            TEST_3.townEntryX = 0;
+            TEST_3.townEntryY = 7;
+            TEST_3.townEntryDirection = TownScreen.AvatarDirection.DOWN;
+            //TEST_3.events[new Point(3, 3)] = Scripts.ChooseYourFate;
+            //TEST_3.events[new Point(5, 1)] = Scripts.AboutTheWar;
+            //TEST_3.events[new Point(5, 5)] = Scripts.FightOrFlee;
+            #endregion
+
+            #region TEST_4
+            TEST_4 = new LocationData();
+            TEST_4.name = "Town 4";
+            TEST_4.map = new char[,]
+            {
+                {'r', 'r', 'r', 'r', 'r', 'r', 'r'},
+                {'r', 'g', 'g', 'g', 'g', 'w', 'r'},
+                {'r', 'g', 'r', 'r', 'g', 'g', 'r'},
+                {'r', 'g', 'g', 't', 'r', 'g', 'r'},
+                {'r', 'g', 'r', 'r', 'r', 'g', 'g'},
+                {'r', 'r', 'r', 'r', 'r', 'q', 'g'},
+                {'r', 'r', 'r', 'r', 'r', 'r', 'g'}
+            };
+            TEST_3.townEntryX = 7;
+            TEST_3.townEntryY = 7;
+            TEST_3.townEntryDirection = TownScreen.AvatarDirection.DOWN;
+            //TEST_3.events[new Point(3, 3)] = Scripts.ChooseYourFate;
+            //TEST_3.events[new Point(5, 1)] = Scripts.AboutTheWar;
+            //TEST_3.events[new Point(5, 5)] = Scripts.FightOrFlee;
+            #endregion
+
+            #region TEST_5
+            TEST_5 = new LocationData();
+            TEST_5.name = "Town 5";
+            TEST_5.map = new char[,]
+            {
+                {'g', 'r', 'r', 'r', 'r', 'r', 'r'},
+                {'g', 'g', 'g', 'g', 'g', 'w', 'r'},
+                {'r', 'g', 'r', 'r', 'g', 'g', 'r'},
+                {'r', 'g', 'g', 't', 'r', 'g', 'r'},
+                {'r', 'g', 'g', 'g', 'r', 'g', 'r'},
+                {'r', 'r', 'r', 'g', 'g', 'q', 'r'},
+                {'r', 'r', 'r', 'r', 'r', 'r', 'r'}
+            };
+            TEST_5.townEntryX = 0;
+            TEST_5.townEntryY = 0;
+            TEST_5.townEntryDirection = TownScreen.AvatarDirection.DOWN;
+            //TEST_3.events[new Point(3, 3)] = Scripts.ChooseYourFate;
+            //TEST_3.events[new Point(5, 1)] = Scripts.AboutTheWar;
+            //TEST_3.events[new Point(5, 5)] = Scripts.FightOrFlee;
+            #endregion
+
+            #region TEST_6
+            TEST_6 = new LocationData();
+            TEST_6.name = "Town 6";
+            TEST_6.map = new char[,]
+            {
+                {'r', 'r', 'r', 'g', 'r', 'r', 'r'},
+                {'r', 'g', 'g', 'g', 'g', 'g', 'r'},
+                {'r', 'g', 'r', 'r', 'g', 'g', 'r'},
+                {'r', 'g', 'g', 'g', 'r', 'g', 'r'},
+                {'r', 'g', 'w', 'g', 'r', 'g', 'r'},
+                {'r', 'r', 'r', 't', 'r', 'q', 'r'},
+                {'r', 'r', 'r', 'r', 'r', 'r', 'r'}
+            };
+            TEST_6.townEntryX = 4;
+            TEST_6.townEntryY = 0;
+            TEST_6.townEntryDirection = TownScreen.AvatarDirection.DOWN;
+            //TEST_3.events[new Point(3, 3)] = Scripts.ChooseYourFate;
+            //TEST_3.events[new Point(5, 1)] = Scripts.AboutTheWar;
+            //TEST_3.events[new Point(5, 5)] = Scripts.FightOrFlee;
+            #endregion
         }
 
         public static LocationData TEST_1;
         public static LocationData TEST_2;
         public static LocationData TEST_3;
+        public static LocationData TEST_4;
+        public static LocationData TEST_5;
+        public static LocationData TEST_6;
 
         public enum State { ALLY, ENEMY, NEUTRAL }
         public State ControllingFaction { set; get; }
