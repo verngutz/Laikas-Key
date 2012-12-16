@@ -254,9 +254,7 @@ namespace Laikas_Key
         {
             MessageScreen.Show("Setup Phase");
             while (Game.InputHandler.Focused is DialogScreen)
-            {
                 yield return 5;
-            }
         }
 
         public override IEnumerator<ulong> ExitSequence()

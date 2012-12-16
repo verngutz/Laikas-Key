@@ -15,6 +15,7 @@ namespace MiUtil
         
         private LinkedList<MiScreen> toDraw;
         private Stack<MiScreen> toUpdate;
+        private Queue<MiScreen> updateQueue;
 
         protected MiInputHandler inputHandler;
         public MiInputHandler InputHandler { get { return inputHandler; } }
@@ -38,6 +39,7 @@ namespace MiUtil
 
             toDraw = new LinkedList<MiScreen>();
             toUpdate = new Stack<MiScreen>();
+            updateQueue = new Queue<MiScreen>();
 
             scriptEngine = new MiScriptEngine(this);
         }
@@ -66,8 +68,12 @@ namespace MiUtil
             scriptEngine.Update(gameTime);
 
             inputHandler.Update(gameTime);
-             
+
+            updateQueue.Clear();
             foreach (MiScreen screen in toUpdate)
+                updateQueue.Enqueue(screen);
+
+            foreach (MiScreen screen in updateQueue)
                 screen.Update(gameTime);
 
 #if DEBUG
