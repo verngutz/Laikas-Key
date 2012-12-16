@@ -48,10 +48,15 @@ namespace Laikas_Key
             MessageScreen.Instance = new MessageScreen(this);
             ChoiceScreen.Instance = new ChoiceScreen(this);
 
-            // Set active screen
-            PushScreen(StartScreen.Instance);
+            // Initialize Scripts
+            Scripts.Init(this);
 
-            ScriptEngine.ExecuteScript(StartScreen.Instance.EntrySequence);
+            // Set active screen
+            StartScreen.Instance.Activate();
+
+            // Run Tutorial
+            ScriptEngine.ExecuteScript(Scripts.Tutorial);
+
             base.Initialize();
         }
 

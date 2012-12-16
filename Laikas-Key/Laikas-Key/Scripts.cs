@@ -2,11 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MiUtil;
 using Choice = System.Collections.Generic.KeyValuePair<string, MiUtil.MiScript>;
+
 namespace Laikas_Key
 {
     static class Scripts
     {
+        private static MiGame game;
+        public static void Init(MiGame game)
+        {
+            Scripts.game = game;
+        }
+
         public static IEnumerator<ulong> ChooseYourFate()
         {
             TownScreen.Instance.PlayerMoveEnabled = false;
@@ -24,7 +32,7 @@ namespace Laikas_Key
                         return null;
                     })
                 );
-            while (TownScreen.Instance.Game.InputHandler.Focused is DialogScreen)
+            while (game.InputHandler.Focused is DialogScreen)
                 yield return 5;
             TownScreen.Instance.PlayerMoveEnabled = true;
             yield break;
@@ -47,7 +55,7 @@ namespace Laikas_Key
                         return null;
                     })
                 );
-            while (TownScreen.Instance.Game.InputHandler.Focused is DialogScreen)
+            while (game.InputHandler.Focused is DialogScreen)
                 yield return 5;
             TownScreen.Instance.PlayerMoveEnabled = true;
             yield break;
@@ -70,9 +78,39 @@ namespace Laikas_Key
                         return null;
                     })
                 );
-            while (TownScreen.Instance.Game.InputHandler.Focused is DialogScreen)
+            while (game.InputHandler.Focused is DialogScreen)
                 yield return 5;
             TownScreen.Instance.PlayerMoveEnabled = true;
+            yield break;
+        }
+
+        private static bool runWorldScreenTutorial = true;
+        public static IEnumerator<ulong> Tutorial()
+        {
+            if(runWorldScreenTutorial)
+            {
+                // Wait for first time player encounters world screen
+                while (!(game.InputHandler.Focused is WorldScreen))
+                    yield return 5;
+
+                System.Console.WriteLine("Showing Green");
+                MessageScreen.Show("Locations with green markers are controlled by your faction.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
+                System.Console.WriteLine("Hiding Green");
+                System.Console.WriteLine("Showing Red");
+                MessageScreen.Show("Locations with red markers are controlled by the enemy faction.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
+                System.Console.WriteLine("Hiding Red");
+                System.Console.WriteLine("Showing Gray");
+                MessageScreen.Show("Locations with gray markers are not controlled by either faction.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
+                System.Console.WriteLine("Hiding Gray");
+
+                runWorldScreenTutorial = false;
+            }
             yield break;
         }
     }

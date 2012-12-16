@@ -125,5 +125,12 @@ namespace Laikas_Key
             ActiveButton.Pressed();
             yield break;
         }
+
+        public void Activate()
+        {
+            Game.RemoveAllScreens();
+            Game.PushScreen(this);
+            Game.ScriptEngine.ExecuteScript(EntrySequence);
+        }
     }
 }

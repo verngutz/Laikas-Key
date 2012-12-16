@@ -40,6 +40,12 @@ namespace Laikas_Key
             Instance.Game.ScriptEngine.ExecuteScript(Instance.EntrySequence);
         }
 
+        public static void Hide()
+        {
+            Instance.Game.ScriptEngine.ExecuteScript(Instance.ExitSequence);
+            Instance.Game.PopScreen();
+        }
+
         public override void LoadContent()
         {
             background.AddTexture(Game.Content.Load<Texture2D>("BlackOut"), 0);

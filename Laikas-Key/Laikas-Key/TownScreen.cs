@@ -100,8 +100,6 @@ namespace Laikas_Key
 
         public override void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), playerX + " " + playerY, new Vector2(20, 20), Color.White);
-            Game.SpriteBatch.DrawString(Game.Content.Load<SpriteFont>("Fonts\\Default"), playerFront.ToString(), new Vector2(20, 40), Color.White);
             tileEngine.Draw(gameTime);
             playerAvatar.Draw(gameTime);
         }
@@ -125,8 +123,7 @@ namespace Laikas_Key
 
         public IEnumerator<ulong> Escape()
         {
-            Game.RemoveAllScreens();
-            Game.PushScreen(StartScreen.Instance);
+            StartScreen.Instance.Activate();
             yield break;
         }
 

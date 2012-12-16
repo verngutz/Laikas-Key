@@ -16,8 +16,6 @@ namespace MiUtil
         private LinkedList<MiScreen> toDraw;
         private Stack<MiScreen> toUpdate;
 
-        private Queue<MiScreen> pending;
-
         protected MiInputHandler inputHandler;
         public MiInputHandler InputHandler { get { return inputHandler; } }
 
@@ -40,8 +38,6 @@ namespace MiUtil
 
             toDraw = new LinkedList<MiScreen>();
             toUpdate = new Stack<MiScreen>();
-
-            pending = new Queue<MiScreen>();
 
             scriptEngine = new MiScriptEngine(this);
         }
@@ -69,15 +65,6 @@ namespace MiUtil
         {
             scriptEngine.Update(gameTime);
 
-            foreach (MiScreen screen in pending)
-            {
-                toUpdate.Push(screen);
-                toDraw.AddLast(screen);
-            }
-
-            pending.Clear();
-
-            inputHandler.Focused = toUpdate.Peek();
             inputHandler.Update(gameTime);
              
             foreach (MiScreen screen in toUpdate)
@@ -117,13 +104,16 @@ namespace MiUtil
 
         public void PushScreen(MiScreen screen)
         {
-            pending.Enqueue(screen);
+            toUpdate.Push(screen);
+            toDraw.AddLast(screen);
+            inputHandler.Focused = screen;
         }
 
         public void PopScreen()
         {
             toUpdate.Pop();
             toDraw.RemoveLast();
+            inputHandler.Focused = toUpdate.Peek();
         }
 
         public bool ContainsScreen(MiScreen screen)

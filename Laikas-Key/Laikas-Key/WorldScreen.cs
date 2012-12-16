@@ -79,6 +79,7 @@ namespace Laikas_Key
                 LocationUI test_1 = new LocationUI(game, 650, 250, 128, 128, LocationData.TEST_1);
                 LocationUI test_2 = new LocationUI(game, 450, 450, 128, 128, LocationData.TEST_2);
 
+                //LocationUI test_3 = new LocationUI(game, 650, 250, 128, 128, LocationData.TEST_3);
                 LocationData.TEST_1.ControllingFaction = LocationData.State.ENEMY;
 
                 //
@@ -168,8 +169,7 @@ namespace Laikas_Key
 
         public IEnumerator<ulong> Escape()
         {
-            Game.RemoveAllScreens();
-            Game.PushScreen(StartScreen.Instance);
+            StartScreen.Instance.Activate();
             yield break;
         }
 
