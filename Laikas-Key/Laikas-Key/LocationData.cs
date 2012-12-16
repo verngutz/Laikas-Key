@@ -129,8 +129,38 @@ namespace Laikas_Key
             //TEST_3.events[new Point(5, 1)] = Scripts.AboutTheWar;
             //TEST_3.events[new Point(5, 5)] = Scripts.FightOrFlee;
             #endregion
+
+
+
+
+
+
+
+            #region HOME
+            HOME = new LocationData();
+            HOME.name = "Proslogion";
+            HOME.map = new char[,]
+            {
+                {'r', 'r', 'r', 'r', 'r', 'r', 'r'},
+                {'r', 'r', 'g', 'g', 'g', 'w', 'r'},
+                {'r', 'r', 'r', 'r', 'g', 'g', 'r'},
+                {'r', 'r', 't', 'g', 'r', 'g', 'r'},
+                {'r', 'g', 'r', 'g', 'r', 'g', 'r'},
+                {'r', 'g', 'r', 'g', 'g', 'q', 'r'},
+                {'r', 'g', 'g', 'g', 'g', 'g', 'r'},
+                {'r', 'g', 'g', 'g', 'g', 'g', 'r'},
+                {'r', 'r', 'r', 'r', 'r', 'r', 'r'}
+            };
+            HOME.townEntryX = 1;
+            HOME.townEntryY = 1;
+            HOME.townEntryDirection = TownScreen.AvatarDirection.DOWN;
+            HOME.events[new Point(3, 3)] = Scripts.ChooseYourFate;
+            HOME.events[new Point(5, 1)] = Scripts.AboutTheWar;
+            HOME.events[new Point(5, 5)] = Scripts.FightOrFlee;
+            #endregion
         }
 
+        public static LocationData HOME;
         public static LocationData TEST_1;
         public static LocationData TEST_2;
         public static LocationData TEST_3;
