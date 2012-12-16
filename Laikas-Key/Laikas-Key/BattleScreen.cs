@@ -90,7 +90,7 @@ namespace Laikas_Key
             {
                 c.CurrMovementPoints = c.MaxMovementPoints;
             }
-
+            
             Game.ScriptEngine.ExecuteScript(AI.Stupid);
         }
 
@@ -353,6 +353,77 @@ namespace Laikas_Key
             }
         }
 
+        public bool SelectMove(Character c)
+        {
+            if (c.CurrMovementPoints <= 0) return false;
+            selectedCharacter = c;
+            positions.Remove(c);
+            return true;
+        }
+
+        public bool SelectAttack(Character c, Attack a)
+        {
+            if (c.CurrMovementPoints < a.MovementCost) return false;
+            selectedCharacter = c;
+            selectedAttack = a;
+            return true;
+        }
+
+        public bool Move(int x, int y)
+        {
+            Point pos = new Point(x, y);
+            if (selectedValidMoves.ContainsKey(pos))
+            {
+                positions[selectedCharacter] = pos;
+                selectedCharacterMovePtsUsed = Math.Abs(x - selectedCharacterX) + Math.Abs(y - selectedCharacterY);
+                selectedCharacter.CurrMovementPoints -= selectedCharacterMovePtsUsed;
+                selectedValidMoves.Clear();
+                return true;
+            }
+            return false;
+        }
+
+        public bool Attack(int x, int y)
+        {
+            Point pos = new Point(x, y);
+            if (selectedValidMoves.ContainsKey(pos))
+            {
+                selectedCharacter.CurrMovementPoints -= selectedAttack.MovementCost;
+                foreach (Character c in positions.Keys)
+                {
+                    if (Math.Abs(positions[c].X - x) + Math.Abs(positions[c].Y - y) <= selectedAttack.AOE)
+                    {
+                        double dodgeChance = c.Speed * 0.0005;
+                        if (random.NextDouble() > dodgeChance)
+                        {
+                            int damage = (int)(
+                                (0.5 + random.NextDouble() * 1.5)
+                                * (selectedCharacter.Will * selectedAttack.TraditionalBaseDamage + selectedCharacter.Mind * selectedAttack.FuturistBaseDamage)
+                                - (0.5 + random.NextDouble())
+                                * (c.Will * selectedAttack.TraditionalBaseDamage + c.Mind * selectedAttack.FuturistBaseDamage)
+                                * c.Vitality / 20);
+                            c.CurrHealth -= damage;
+                        }
+                    }
+                }
+                foreach (Character c in Player.Party.FindAll(c => c.IsDead()))
+                {
+                    positions.Remove(c);
+                }
+                foreach (Character c in enemies.FindAll(c => c.IsDead()))
+                {
+                    positions.Remove(c);
+                }
+                Player.Party.RemoveAll(c => c.IsDead());
+                enemies.RemoveAll(c => c.IsDead());
+                selectedValidMoves.Clear();
+                selectedAOE.Clear();
+                Game.ScriptEngine.ExecuteScript(Flash);
+                return true;
+            }
+            return false;
+        }
+
         public IEnumerator<ulong> Pressed()
         {
             switch (State)
@@ -384,14 +455,13 @@ namespace Laikas_Key
                             }
                             else
                             {
-                                selectedCharacter = c;
                                 ChoiceScreen.Show("What will " + c.Name + " do with his remaining " + c.CurrMovementPoints + " movement points?",
                                     new Choice("Attack",
                                         delegate
                                         {
                                             selectedCharacterX = cursorX;
                                             selectedCharacterY = cursorY;
-                                            KeyValuePair<string, MiScript>[] attacks = new KeyValuePair<string, MiScript>[c.KnownAttacks.Count+1];
+                                            Choice[] attacks = new Choice[c.KnownAttacks.Count+1];
                                             for (int i = 0; i < c.KnownAttacks.Count; i++)
                                             {
                                                 Attack curr = c.KnownAttacks[i];
@@ -404,7 +474,7 @@ namespace Laikas_Key
                                                         }
                                                         else
                                                         {
-                                                            selectedAttack = curr;
+                                                            SelectAttack(c, curr);
                                                             positions.Remove(c);
                                                             MapFloodFill(cursorX, cursorY, curr.Range, true, Color.Yellow, selectedValidMoves);
                                                             MapFloodFill(cursorX, cursorY, selectedAttack.AOE, true, Color.Salmon, selectedAOE);
@@ -414,16 +484,16 @@ namespace Laikas_Key
                                                         return null;
                                                     });
                                             }
-                                            attacks[attacks.Length - 1] = new KeyValuePair<string, MiScript>("Nevermind", MiScreen.DoNothing);
+                                            attacks[attacks.Length - 1] = new Choice("Nevermind", MiScreen.DoNothing);
                                             ChoiceScreen.Show("Which Attack?", attacks);
                                             return null;
                                         }),
                                     new Choice("Move",
                                         delegate
                                         {
+                                            SelectMove(c);
                                             selectedCharacterX = cursorX;
                                             selectedCharacterY = cursorY;
-                                            positions.Remove(c);
                                             MapFloodFill(cursorX, cursorY, c.CurrMovementPoints, false, Color.Yellow, selectedValidMoves);
                                             colorChanged = true;
                                             State = BattleState.CHARACTER_MOVE;
@@ -437,14 +507,8 @@ namespace Laikas_Key
                     }
                     break;
                 case BattleState.CHARACTER_MOVE:
-                    if (selectedValidMoves.ContainsKey(new Point(cursorX, cursorY)))
-                    {
-                        positions[selectedCharacter] = new Point(cursorX, cursorY);
-                        selectedCharacterMovePtsUsed = Math.Abs(cursorX - selectedCharacterX) + Math.Abs(cursorY - selectedCharacterY);
-                        selectedCharacter.CurrMovementPoints -= selectedCharacterMovePtsUsed;
-                        selectedValidMoves.Clear();
+                    if (Move(cursorX, cursorY))
                         State = BattleState.NOTIF;
-                    }
                     else
                     {
                         MessageScreen.Show("You can't choose that position");
@@ -455,40 +519,9 @@ namespace Laikas_Key
                     }
                     break;
                 case BattleState.CHARACTER_ATTACK:
-                    if (selectedValidMoves.ContainsKey(new Point(cursorX, cursorY)))
+                    if (Attack(cursorX, cursorY))
                     {
-                        selectedCharacter.CurrMovementPoints -= selectedAttack.MovementCost;
-                        foreach (Character c in positions.Keys)
-                        {
-                            if (Math.Abs(positions[c].X - cursorX) + Math.Abs(positions[c].Y - cursorY) <= selectedAttack.AOE)
-                            {
-                                double dodgeChance = c.Speed * 0.0005;
-                                if (random.NextDouble() > dodgeChance)
-                                {
-                                    int damage = (int)(
-                                        (0.5 + random.NextDouble() * 1.5)
-                                        * (selectedCharacter.Will * selectedAttack.TraditionalBaseDamage + selectedCharacter.Mind * selectedAttack.FuturistBaseDamage)
-                                        - (0.5 + random.NextDouble())
-                                        * (c.Will * selectedAttack.TraditionalBaseDamage + c.Mind * selectedAttack.FuturistBaseDamage)
-                                        * c.Vitality / 20);
-                                    c.CurrHealth -= damage;
-                                }
-                            }
-                        }
-                        foreach(Character c in Player.Party.FindAll(c => c.IsDead()))
-                        {
-                            positions.Remove(c);
-                        }
-                        foreach (Character c in enemies.FindAll(c => c.IsDead()))
-                        {
-                            positions.Remove(c);
-                        }
-                        Player.Party.RemoveAll(c => c.IsDead());
-                        enemies.RemoveAll(c => c.IsDead());
                         colorChanged = true;
-                        selectedValidMoves.Clear();
-                        selectedAOE.Clear();
-                        Game.ScriptEngine.ExecuteScript(Flash);
                         State = BattleState.NOTIF;
                     }
                     else

@@ -42,10 +42,8 @@ namespace Laikas_Key
                         Point pos;
                         do
                         {
-                            pos = new Point(
-                            (int)(random.Next(game.TileEngine.MapGraphics.GetLength(1) - 1 - BattleScreen.ALLOWED_INITIAL_REGION, game.TileEngine.MapGraphics.GetLength(1) - 1)),
-                            (int)(random.Next(0, game.TileEngine.MapGraphics.GetLength(0) - 1))
-                            );
+                            pos.X = (int)(random.Next(game.TileEngine.MapGraphics.GetLength(1) - 1 - BattleScreen.ALLOWED_INITIAL_REGION, game.TileEngine.MapGraphics.GetLength(1) - 1));
+                            pos.Y = (int)(random.Next(0, game.TileEngine.MapGraphics.GetLength(0) - 1));
                         }
                         while(!game.TileEngine.MapPassability[pos.Y, pos.X] || BattleScreen.Instance.Positions.ContainsValue(pos));
                         BattleScreen.Instance.Positions[c] = pos;
