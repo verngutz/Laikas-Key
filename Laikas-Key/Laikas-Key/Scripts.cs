@@ -93,24 +93,25 @@ namespace Laikas_Key
                 while (!(game.InputHandler.Focused is WorldScreen))
                     yield return 5;
 
-                System.Console.WriteLine("Showing Green");
                 MessageScreen.Show("Locations with green markers are controlled by your faction.");
                 while (game.InputHandler.Focused is DialogScreen)
                     yield return 5;
-                System.Console.WriteLine("Hiding Green");
-                System.Console.WriteLine("Showing Red");
                 MessageScreen.Show("Locations with red markers are controlled by the enemy faction.");
                 while (game.InputHandler.Focused is DialogScreen)
                     yield return 5;
-                System.Console.WriteLine("Hiding Red");
-                System.Console.WriteLine("Showing Gray");
                 MessageScreen.Show("Locations with gray markers are not controlled by either faction.");
                 while (game.InputHandler.Focused is DialogScreen)
                     yield return 5;
-                System.Console.WriteLine("Hiding Gray");
 
                 runWorldScreenTutorial = false;
             }
+
+            // Add the "self" to party
+            Character self = new Character("You", 5, 5, 5, 5, 5);
+            self.KnownAttacks.Add(Attack.shootGun);
+            self.KnownAttacks.Add(Attack.swingSword);
+            Player.Party.Add(self);
+
             yield break;
         }
     }

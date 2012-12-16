@@ -18,6 +18,7 @@ namespace Laikas_Key
     class Laikas : MiGame
     {
         private MiTileEngine tileEngine;
+        public MiTileEngine TileEngine { get { return tileEngine; } }
 
         protected override void Initialize()
         {
@@ -50,6 +51,7 @@ namespace Laikas_Key
 
             // Initialize Scripts
             Scripts.Init(this);
+            AI.Init(this);
 
             // Set active screen
             StartScreen.Instance.Activate();
