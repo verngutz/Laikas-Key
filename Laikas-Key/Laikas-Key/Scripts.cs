@@ -239,6 +239,11 @@ namespace Laikas_Key
             self.KnownAttacks.Add(Attack.swingSword);
             Player.Party.Add(self);
 
+            Character me = new Character("Me", 5, 5, 5, 5, 5);
+            self.KnownAttacks.Add(Attack.shootGun);
+            self.KnownAttacks.Add(Attack.swingSword);
+            Player.Party.Add(me);
+
             yield break;
         }
     }

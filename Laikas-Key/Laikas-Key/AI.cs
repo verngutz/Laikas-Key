@@ -30,13 +30,11 @@ namespace Laikas_Key
             {
                 if (terminate)
                 {
-                    System.Console.WriteLine("Terminated");
                     terminate = false;
                     break;
                 }
                 if (setup)
                 {
-                    System.Console.WriteLine("Setup");
                     foreach (Character c in BattleScreen.Instance.Enemies)
                     {
                         Point pos;
@@ -52,6 +50,76 @@ namespace Laikas_Key
                 }
                 else if(BattleScreen.Instance.State == BattleScreen.BattleState.ENEMY_TURN)
                 {
+                    foreach (Character c in BattleScreen.Instance.Enemies)
+                    {
+                        while (c.CurrMovementPoints > 0)
+                        {
+                            Character min = null;
+                            int minDist = 10000;
+                            foreach (Character p in Player.Party)
+                            {
+                                int currDist = Math.Abs(BattleScreen.Instance.Positions[c].X - BattleScreen.Instance.Positions[p].X)
+                                    + Math.Abs(BattleScreen.Instance.Positions[c].Y - BattleScreen.Instance.Positions[p].Y);
+                                if (currDist < minDist)
+                                {
+                                    minDist = currDist;
+                                    min = p;
+                                }
+                            }
+                            if (min == null) break;
+
+                            bool move = true;
+                            foreach (Attack a in c.KnownAttacks)
+                            {
+                                if(BattleScreen.Instance.SelectAttack(c, a))
+                                {
+                                    yield return 25;
+                                    foreach(Point p in BattleScreen.Instance.SelectedValidMoves.Keys)
+                                    {
+                                        BattleScreen.Instance.RecalculateAOE(p.X, p.Y, a.AOE);
+                                        if (min == null) break;
+                                        if(BattleScreen.Instance.SelectedAOE.ContainsKey(BattleScreen.Instance.Positions[min]))
+                                        {            
+                                            BattleScreen.Instance.Attack(p.X, p.Y);
+                                            yield return 25;
+                                            move = false;
+                                            break;
+                                        }
+                                    }
+                                    BattleScreen.Instance.SelectedValidMoves.Clear();
+                                    BattleScreen.Instance.SelectedAOE.Clear();
+                                }
+                            }
+
+                            if (move)
+                            {
+                                Point nearest = new Point();
+                                int minManhat = 10000;
+                                Point curr = BattleScreen.Instance.Positions[c];
+                                BattleScreen.Instance.SelectMove(c);
+                                yield return 25;
+                                foreach (Point p in BattleScreen.Instance.SelectedValidMoves.Keys)
+                                {
+                                    if (curr.Equals(p))
+                                        continue;
+                                    int currDist = Math.Abs(BattleScreen.Instance.Positions[min].X - p.X)
+                                    + Math.Abs(BattleScreen.Instance.Positions[min].Y - p.Y);
+                                    if (currDist < minManhat)
+                                    {
+                                        minManhat = currDist;
+                                        nearest = p;
+                                    }
+                                }
+                                BattleScreen.Instance.Move(nearest.X, nearest.Y);
+                                yield return 25;
+                            }
+                        }
+                    }
+
+                    foreach (Character c in BattleScreen.Instance.Enemies)
+                    {
+                        c.CurrMovementPoints = c.MaxMovementPoints;
+                    }
                     BattleScreen.Instance.State = BattleScreen.BattleState.NOTIF;
                 }
                 yield return 5;

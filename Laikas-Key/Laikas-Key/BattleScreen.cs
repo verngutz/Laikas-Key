@@ -36,7 +36,9 @@ namespace Laikas_Key
         private int selectedCharacterX;
         private int selectedCharacterY;
         private Dictionary<Point, int> selectedValidMoves;
+        public Dictionary<Point, int> SelectedValidMoves { get { return selectedValidMoves; } }
         private Dictionary<Point, int> selectedAOE;
+        public Dictionary<Point, int> SelectedAOE { get { return selectedAOE; } }
         private Attack selectedAttack;
         private int selectedCharacterMovePtsUsed;
 
@@ -357,7 +359,15 @@ namespace Laikas_Key
         {
             if (c.CurrMovementPoints <= 0) return false;
             selectedCharacter = c;
+            selectedCharacterX = positions[c].X;
+            selectedCharacterY = positions[c].Y;
             positions.Remove(c);
+            selectedValidMoves.Clear();
+            MapFloodFill(selectedCharacterX, selectedCharacterY, c.CurrMovementPoints, false, Color.Yellow, selectedValidMoves);
+            System.Console.WriteLine(c.Name + ": " + selectedCharacterX + ", " + selectedCharacterY);
+            foreach(Point p in selectedValidMoves.Keys)
+                System.Console.WriteLine(p.X + " " + p.Y);
+            colorChanged = true;
             return true;
         }
 
@@ -366,6 +376,13 @@ namespace Laikas_Key
             if (c.CurrMovementPoints < a.MovementCost) return false;
             selectedCharacter = c;
             selectedAttack = a;
+            int x = positions[c].X;
+            int y = positions[c].Y;
+            positions.Remove(c);
+            MapFloodFill(x, y, a.Range, true, Color.Yellow, selectedValidMoves);
+            RecalculateAOE(x, y, a.AOE);
+            colorChanged = true;
+            positions[c] = new Point(x, y);
             return true;
         }
 
@@ -475,10 +492,6 @@ namespace Laikas_Key
                                                         else
                                                         {
                                                             SelectAttack(c, curr);
-                                                            positions.Remove(c);
-                                                            MapFloodFill(cursorX, cursorY, curr.Range, true, Color.Yellow, selectedValidMoves);
-                                                            MapFloodFill(cursorX, cursorY, selectedAttack.AOE, true, Color.Salmon, selectedAOE);
-                                                            positions[c] = new Point(cursorX, cursorY);
                                                             State = BattleState.CHARACTER_ATTACK;
                                                         }
                                                         return null;
@@ -492,10 +505,6 @@ namespace Laikas_Key
                                         delegate
                                         {
                                             SelectMove(c);
-                                            selectedCharacterX = cursorX;
-                                            selectedCharacterY = cursorY;
-                                            MapFloodFill(cursorX, cursorY, c.CurrMovementPoints, false, Color.Yellow, selectedValidMoves);
-                                            colorChanged = true;
                                             State = BattleState.CHARACTER_MOVE;
                                             return null;
                                         }),
@@ -535,6 +544,12 @@ namespace Laikas_Key
                     break;
             }
             yield break;
+        }
+
+        public void RecalculateAOE(int x, int y, int aoe)
+        {
+            SelectedAOE.Clear();
+            MapFloodFill(x, y, aoe, true, Color.Salmon, selectedAOE);
         }
 
         private void MapFloodFill(int x, int y, int radius, bool includeOccupied, Color color, Dictionary<Point, int> toFill)
