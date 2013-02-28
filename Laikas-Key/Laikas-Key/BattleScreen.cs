@@ -241,7 +241,7 @@ namespace Laikas_Key
         private bool waiting = false;
         public IEnumerator<ulong> Fight()
         {
-            MessageScreen.Show("Select a character to move.");
+            MessageScreen.Show("Select a character to move. Press the Escape Key to cancel.");
             waiting = true;
             while (Game.InputHandler.Focused is DialogScreen)
                 yield return 5;
@@ -331,7 +331,7 @@ namespace Laikas_Key
             {
                 case BattleState.CHARACTER_SELECT:
                     State = BattleState.NOTIF;
-                    return null;
+                    yield break;
                 case BattleState.CHARACTER_MOVE:
                     positions[selectedCharacter] = new Point(selectedCharacterX, selectedCharacterY);
                     for (int row = 0; row < tileEngine.MapGraphics.GetLength(0); row++)
@@ -344,7 +344,12 @@ namespace Laikas_Key
                     selectedValidMoves.Clear();
                     colorChanged = false;
                     State = BattleState.CHARACTER_SELECT;
-                    return null;
+                    MessageScreen.Show("Select a character to move. Press the Escape Key to cancel.");
+                    waiting = true;
+                    while (Game.InputHandler.Focused is DialogScreen)
+                        yield return 5;
+                    waiting = false;
+                    yield break;
                 case BattleState.CHARACTER_ATTACK:
                     for (int row = 0; row < tileEngine.MapGraphics.GetLength(0); row++)
                     {
@@ -357,9 +362,15 @@ namespace Laikas_Key
                     selectedAOE.Clear();
                     colorChanged = false;
                     State = BattleState.CHARACTER_SELECT;
-                    return null;
+                    MessageScreen.Show("Select a character to move. Press the Escape Key to cancel.");
+                    waiting = true;
+                    while (Game.InputHandler.Focused is DialogScreen)
+                        yield return 5;
+                    waiting = false;
+                    yield break;
                 default:
-                    return ExitSequence();
+                    Game.ScriptEngine.ExecuteScript(ExitSequence);
+                    yield break;
             }
         }
 
@@ -500,6 +511,7 @@ namespace Laikas_Key
                                                         else
                                                         {
                                                             SelectAttack(c, curr);
+                                                            MessageScreen.Show("Choose a position to attack. Press the Escape Key to cancel.");
                                                             State = BattleState.CHARACTER_ATTACK;
                                                         }
                                                         return null;
@@ -513,6 +525,7 @@ namespace Laikas_Key
                                         delegate
                                         {
                                             SelectMove(c);
+                                            MessageScreen.Show("Choose where to move. Press the Escape Key to cancel.");
                                             State = BattleState.CHARACTER_MOVE;
                                             return null;
                                         }),
@@ -558,6 +571,14 @@ namespace Laikas_Key
         {
             SelectedAOE.Clear();
             MapFloodFill(x, y, aoe, true, Color.Salmon, selectedAOE);
+        }
+
+        public void ClearFill()
+        {
+            foreach (MiAnimatingComponent tile in tileEngine.MapGraphics)
+            {
+                tile.Color = Color.White;
+            }
         }
 
         private void MapFloodFill(int x, int y, int radius, bool includeOccupied, Color color, Dictionary<Point, int> toFill)

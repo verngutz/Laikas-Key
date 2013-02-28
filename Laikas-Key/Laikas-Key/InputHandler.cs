@@ -24,31 +24,34 @@ namespace Laikas_Key
 
         public override void Update(GameTime gameTime)
         {
-            MiStandardControllerState newState = Controller.GetState();
-            foreach (MiControl control in Controller.controls)
+            if (Enabled)
             {
-                if (oldState.IsReleased(control) && newState.IsPressed(control))
+                MiStandardControllerState newState = Controller.GetState();
+                foreach (MiControl control in Controller.controls)
                 {
-                    Game.ScriptEngine.ExecuteScript(Focused.RespondToInput(control));
-                }
+                    if (oldState.IsReleased(control) && newState.IsPressed(control))
+                    {
+                        Game.ScriptEngine.ExecuteScript(Focused.RespondToInput(control));
+                    }
 
-                if (oldState.IsPressed(control) && newState.IsPressed(control))
-                {
-                    holdTimer[control]++;
-                    if (holdTimer[control] > HOLD_REPEAT_INTERVAL)
+                    if (oldState.IsPressed(control) && newState.IsPressed(control))
+                    {
+                        holdTimer[control]++;
+                        if (holdTimer[control] > HOLD_REPEAT_INTERVAL)
+                        {
+                            holdTimer[control] = 0;
+                            Game.ScriptEngine.ExecuteScript(Focused.RespondToInput(control));
+                        }
+                    }
+
+                    if (newState.IsReleased(control))
                     {
                         holdTimer[control] = 0;
-                        Game.ScriptEngine.ExecuteScript(Focused.RespondToInput(control));
                     }
                 }
 
-                if (newState.IsReleased(control))
-                {
-                    holdTimer[control] = 0;
-                }
+                oldState = newState;
             }
-
-            oldState = newState;
         }
     }
 }

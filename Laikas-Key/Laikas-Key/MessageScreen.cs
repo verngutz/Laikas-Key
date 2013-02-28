@@ -5,13 +5,14 @@ using System.Text;
 using MiUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Laikas_Key
 {
     class MessageScreen : DialogScreen
     {
         private const int HEIGHT = 600;
-
+        private SoundEffect press;
         public static MessageScreen Instance { get; set; }
 
         private string message;
@@ -38,6 +39,7 @@ namespace Laikas_Key
             Instance.message = message;
             Instance.Game.PushScreen(Instance);
             Instance.Game.ScriptEngine.ExecuteScript(Instance.EntrySequence);
+            Instance.press.Play();
         }
 
         public static void Hide()
@@ -49,6 +51,7 @@ namespace Laikas_Key
         public override void LoadContent()
         {
             background.AddTexture(Game.Content.Load<Texture2D>("BlackOut"), 0);
+            press = Game.Content.Load<SoundEffect>("Sounds\\button");
         }
 
         public override void Update(GameTime gameTime)

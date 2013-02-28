@@ -19,6 +19,7 @@ namespace Laikas_Key
     {
         private MiTileEngine tileEngine;
         public MiTileEngine TileEngine { get { return tileEngine; } }
+        private Song theme;
 
         protected override void Initialize()
         {
@@ -71,6 +72,10 @@ namespace Laikas_Key
             BattleScreen.Instance.LoadContent();
             MessageScreen.Instance.LoadContent();
             ChoiceScreen.Instance.LoadContent();
+
+            theme = Content.Load<Song>("Sounds\\theme");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(theme);
             base.LoadContent();
         }
     }

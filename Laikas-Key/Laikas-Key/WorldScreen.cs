@@ -5,6 +5,7 @@ using System.Text;
 using MiUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Laikas_Key
 {
@@ -64,7 +65,7 @@ namespace Laikas_Key
         private MiAnimatingComponent background;
         private LocationUI activeLocation;
         private List<LocationUI> allLocations;
-
+        private SoundEffect arrow;
         private MiAnimatingComponent cursor;
 
         public WorldScreen(MiGame game)
@@ -134,6 +135,7 @@ namespace Laikas_Key
                 locationUI.LoadContent();
             }
             cursor.AddTexture(Game.Content.Load<Texture2D>("Main Menu\\pointer"), 0);
+            arrow = Game.Content.Load<SoundEffect>("Sounds\\crossbow");
         }
 
         public override void Draw(GameTime gameTime)
@@ -179,6 +181,7 @@ namespace Laikas_Key
             {
                 activeLocation = activeLocation.Neighbors[dir];
                 cursor.Position = new Point(activeLocation.ButtonBase.Position.X - 50, activeLocation.ButtonBase.Position.Y + 30);
+                arrow.Play();
             }
             yield break;
         }

@@ -69,6 +69,7 @@ namespace Laikas_Key
                             if (min == null) break;
 
                             bool move = true;
+                            
                             foreach (Attack a in c.KnownAttacks)
                             {
                                 if(BattleScreen.Instance.SelectAttack(c, a))
@@ -77,7 +78,7 @@ namespace Laikas_Key
                                     foreach(Point p in BattleScreen.Instance.SelectedValidMoves.Keys)
                                     {
                                         BattleScreen.Instance.RecalculateAOE(p.X, p.Y, a.AOE);
-                                        if (min == null) break;
+                                        if (min == null || !BattleScreen.Instance.Positions.ContainsKey(min)) break;
                                         if(BattleScreen.Instance.SelectedAOE.ContainsKey(BattleScreen.Instance.Positions[min]))
                                         {            
                                             BattleScreen.Instance.Attack(p.X, p.Y);
@@ -88,7 +89,9 @@ namespace Laikas_Key
                                     }
                                     BattleScreen.Instance.SelectedValidMoves.Clear();
                                     BattleScreen.Instance.SelectedAOE.Clear();
+                                    BattleScreen.Instance.ClearFill();
                                 }
+                                if (min == null || !BattleScreen.Instance.Positions.ContainsKey(min)) break;
                             }
 
                             if (move)
@@ -111,6 +114,7 @@ namespace Laikas_Key
                                     }
                                 }
                                 BattleScreen.Instance.Move(nearest.X, nearest.Y);
+                                BattleScreen.Instance.ClearFill();
                                 yield return 25;
                             }
                         }
