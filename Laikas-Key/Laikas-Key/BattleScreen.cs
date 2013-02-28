@@ -188,6 +188,7 @@ namespace Laikas_Key
                 return;
             }
 
+            if(!waiting)
             switch (State)
             {
                 case BattleState.NOTIF:
@@ -218,12 +219,7 @@ namespace Laikas_Key
                             colorChanged = false;
                         }
                         ChoiceScreen.Show("What to do?",
-                            new Choice("Fight",
-                                delegate
-                                {
-                                    State = BattleState.CHARACTER_SELECT;
-                                    return null;
-                                }),
+                            new Choice("Fight", Fight),
                             new Choice("End Turn",
                                 delegate
                                 {
@@ -240,6 +236,18 @@ namespace Laikas_Key
             }
                 
             cursor.Update(gameTime);
+        }
+
+        private bool waiting = false;
+        public IEnumerator<ulong> Fight()
+        {
+            MessageScreen.Show("Select a character to move.");
+            waiting = true;
+            while (Game.InputHandler.Focused is DialogScreen)
+                yield return 5;
+            waiting = false;
+            State = BattleState.CHARACTER_SELECT;
+            yield break;
         }
 
         public override IEnumerator<ulong> EntrySequence()

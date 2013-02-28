@@ -229,6 +229,12 @@ namespace Laikas_Key
                 MessageScreen.Show("Locations with gray markers are not controlled by either faction.");
                 while (game.InputHandler.Focused is DialogScreen)
                     yield return 5;
+                MessageScreen.Show("Move the arrow keys to choose an area.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
+                MessageScreen.Show("Press Enter to enter the area.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
 
                 runWorldScreenTutorial = false;
             }
