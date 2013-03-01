@@ -142,18 +142,22 @@ namespace Laikas_Key
                     case AvatarDirection.UP:
                         newY--;
                         tileYMovement = tileEngine.TileHeight;
+                        playerAvatar.SpriteState = AvatarDirection.UP;
                         break;
                     case AvatarDirection.DOWN:
                         newY++;
                         tileYMovement = -tileEngine.TileHeight;
+                        playerAvatar.SpriteState = AvatarDirection.DOWN;
                         break;
                     case AvatarDirection.LEFT:
                         newX--;
                         tileXMovement = tileEngine.TileWidth;
+                        playerAvatar.SpriteState = AvatarDirection.LEFT;
                         break;
                     case AvatarDirection.RIGHT:
                         newX++;
                         tileXMovement = -tileEngine.TileWidth;
+                        playerAvatar.SpriteState = AvatarDirection.RIGHT;
                         break;
                 }
                 if (tileEngine.MapPassability[newY, newX])

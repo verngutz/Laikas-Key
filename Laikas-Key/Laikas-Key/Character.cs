@@ -8,6 +8,7 @@ namespace Laikas_Key
     class Character
     {
         private int speed;
+        
         public int Speed { get { return speed; } }
         public int MaxMovementPoints { get { return 3 + (int)(speed * 0.0005); } }
 

@@ -118,7 +118,7 @@ namespace Laikas_Key
         public static IEnumerator<ulong> SchneiderMail()
         {
             TownScreen.Instance.PlayerMoveEnabled = false;
-            MessageScreen.Show("Schneider:	Hey, have you heard? There’s a man to the West claiming to have come from the future. He’s telling everyone about technological acceleration and stuff. Freaking insane right? We’ve got to see this! Let’s meet later at the Academe (school) cafe. I’ll tell Andres.");
+            MessageScreen.Show("Schneider: Hey, have you heard? There’s a man to the West claiming to have come from the future. He’s telling everyone about technological acceleration and stuff. Freaking insane right? We’ve got to see this! Let’s meet later at the Academe (school) cafe. I’ll tell Andres.");
             while (game.InputHandler.Focused is DialogScreen)
                 yield return 5;
             TownScreen.Instance.PlayerMoveEnabled = true;
@@ -128,7 +128,7 @@ namespace Laikas_Key
         public static IEnumerator<ulong> AndresMail()
         {
             TownScreen.Instance.PlayerMoveEnabled = false;
-            MessageScreen.Show("Andres:		Hey lazy bones! Get up and get your arse up here to school cafe! We need to talk. It’s about this crazy guy who says he’s from the future and he goes “down with technology” and what-not and wants to protect our environment. This I gotta see. And so should you. I’ll tell Schneider.");
+            MessageScreen.Show("Andres: Hey lazy bones! Get up and get your arse up here to school cafe! We need to talk. It’s about this crazy guy who says he’s from the future and he goes “down with technology” and what-not and wants to protect our environment. This I gotta see. And so should you. I’ll tell Schneider.");
             while (game.InputHandler.Focused is DialogScreen)
                 yield return 5;
             TownScreen.Instance.PlayerMoveEnabled = true;
@@ -154,23 +154,32 @@ namespace Laikas_Key
             TownScreen.Instance.PlayerMoveEnabled = true;
             yield break;
         }
-
+        public static IEnumerator<ulong> NextMap()
+        {
+            WorldScreen.Instance.Activate();
+           
+            while (game.InputHandler.Focused is DialogScreen)
+                yield return 5;
+            TownScreen.Instance.PlayerMoveEnabled = true;
+            yield break;
+        }
         public static IEnumerator<ulong> CourtYard()
         {
             TownScreen.Instance.PlayerMoveEnabled = false;
-            MessageScreen.Show("Engineer: 	Attack me one more time or these students die.");
+            MessageScreen.Show("Engineer: Attack me one more time or these students die.");
             while (game.InputHandler.Focused is DialogScreen)
                 yield return 5;
-            MessageScreen.Show("Andres: 	Let them go!");
+            MessageScreen.Show("Andres: Let them go!");
             while (game.InputHandler.Focused is DialogScreen)
                 yield return 5;
-            MessageScreen.Show("Engineer: 	Why should I? So you Traditionalist scums can brainwash these students? Under no circumstances will I give them back to you. Come join us; you two look like you have potential.");
+            MessageScreen.Show("Engineer: Why should I? So you Traditionalist scums can brainwash these students? \nUnder no circumstances will I give them back to you. \nCome join us; you two look like you have potential.");
             while (game.InputHandler.Focused is DialogScreen)
                 yield return 5;
-            MessageScreen.Show("Schneider: 	It’s gonna be fine. I chose to be captured. I will not waste one more day with people who do not want change. Change is necessary for this world to be better. Will you come with me?");
+
+            MessageScreen.Show("Schneider: It's gonna be fine. I chose to be captured. \nI will not waste one more day with people who do not want change.");
             while (game.InputHandler.Focused is DialogScreen)
                 yield return 5;
-            MessageScreen.Show("Andres: 	I want no part in this war. Come with me.");
+            MessageScreen.Show("Andres: I want no part in this war. Come with me.");
             while (game.InputHandler.Focused is DialogScreen)
                 yield return 5;
             TownScreen.Instance.PlayerMoveEnabled = true;
@@ -237,6 +246,8 @@ namespace Laikas_Key
             Character self = new Character("You", 5, 5, 5, 5, 5);
             self.KnownAttacks.Add(Attack.shootGun);
             self.KnownAttacks.Add(Attack.swingSword);
+            self.KnownAttacks.Add(Attack.heal);
+
             Player.Party.Add(self);
 
             yield break;

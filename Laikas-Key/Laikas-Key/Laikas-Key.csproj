@@ -101,7 +101,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laikas-KeyContent\Laikas-KeyContent.contentproj">
-      <Name>Laikas_KeyContent</Name>
+      <Project>{50F00198-FCDD-40AB-9DF1-F6D275019916}</Project>
+      <Name>Laikas-KeyContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
     <ProjectReference Include="..\MiUtil\MiUtil.csproj">
