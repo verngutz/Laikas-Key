@@ -5,6 +5,7 @@ using System.Text;
 using MiUtil;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Laikas_Key
 {
@@ -13,7 +14,8 @@ namespace Laikas_Key
         public static ChoiceScreen Instance { get; set; }
 
         private string message;
-
+        private SoundEffect press;
+        private SoundEffect arrow;
         private KeyValuePair<string, MiScript>[] choices;
         private int activeChoice;
 
@@ -55,6 +57,8 @@ namespace Laikas_Key
         {
             background.AddTexture(Game.Content.Load<Texture2D>("BlackOut"), 0);
             cursor.AddTexture(Game.Content.Load<Texture2D>("Arrow"), 0);
+            press = Game.Content.Load<SoundEffect>("Sounds\\button");
+            arrow = Game.Content.Load<SoundEffect>("Sounds\\crossbow");
         }
 
         public override void Update(GameTime gameTime)
@@ -109,6 +113,7 @@ namespace Laikas_Key
             {
                 activeChoice--;
                 cursor.Position = new Point(cursor.Position.X, cursor.Position.Y - 30);
+                arrow.Play();
             }
             yield break;
         }
@@ -119,6 +124,7 @@ namespace Laikas_Key
             {
                 activeChoice++;
                 cursor.Position = new Point(cursor.Position.X, cursor.Position.Y + 30);
+                arrow.Play();
             }
             yield break;
         }
@@ -142,6 +148,7 @@ namespace Laikas_Key
             Instance.cursor.Position = new Point(25, 685);
             Instance.Game.PushScreen(Instance);
             Instance.Game.ScriptEngine.ExecuteScript(Instance.EntrySequence);
+            Instance.press.Play();
         }
     }
 }

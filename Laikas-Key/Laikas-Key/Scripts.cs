@@ -219,10 +219,27 @@ namespace Laikas_Key
         }
 
 
-
+        private static bool runStartScreenTutorial = true;
         private static bool runWorldScreenTutorial = true;
+        private static bool runTownScreenTutorial = true;
         public static IEnumerator<ulong> Tutorial()
         {
+            if (runStartScreenTutorial)
+            {
+                game.InputHandler.Enabled = false;
+                yield return 100;
+                game.InputHandler.Enabled = true;
+                MessageScreen.Show("Press the Space Bar to acknowledge messages.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
+                MessageScreen.Show("Press the Up or Down arrow keys to move the cursor.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
+                MessageScreen.Show("Press the Space Bar to select.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
+                runStartScreenTutorial = false;
+            }
             if(runWorldScreenTutorial)
             {
                 // Wait for first time player encounters world screen
@@ -238,6 +255,12 @@ namespace Laikas_Key
                 MessageScreen.Show("Locations with gray markers are not controlled by either faction.");
                 while (game.InputHandler.Focused is DialogScreen)
                     yield return 5;
+                MessageScreen.Show("Press the arrow keys to move the cursor.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
+                MessageScreen.Show("Press the Space Bar to enter the selected area.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
 
                 runWorldScreenTutorial = false;
             }
@@ -249,6 +272,25 @@ namespace Laikas_Key
             self.KnownAttacks.Add(Attack.heal);
 
             Player.Party.Add(self);
+
+            Character me = new Character("Me", 5, 5, 5, 5, 5);
+            self.KnownAttacks.Add(Attack.shootGun);
+            self.KnownAttacks.Add(Attack.swingSword);
+            Player.Party.Add(me);
+
+            if (runTownScreenTutorial)
+            {
+                // Wait for first time player encounters town screen
+                while (!(game.InputHandler.Focused is TownScreen))
+                    yield return 5;
+                MessageScreen.Show("Press the arrow keys to move.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
+                MessageScreen.Show("Press the Space Bar to talk to people.");
+                while (game.InputHandler.Focused is DialogScreen)
+                    yield return 5;
+                runTownScreenTutorial = false;
+            }
 
             yield break;
         }

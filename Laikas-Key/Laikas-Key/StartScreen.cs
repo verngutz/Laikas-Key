@@ -5,6 +5,7 @@ using System.Text;
 using MiUtil;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Laikas_Key
 {
@@ -21,6 +22,7 @@ namespace Laikas_Key
         private MiAnimatingComponent background;
 
         private MiAnimatingComponent cursor;
+        private SoundEffect arrow;
 
         public StartScreen(MiGame game)
             : base(game)
@@ -78,6 +80,7 @@ namespace Laikas_Key
             quitGameButtonBase.AddTexture(Game.Content.Load<Texture2D>("Main Menu\\quitglow"), 0);
             background.AddTexture(Game.Content.Load<Texture2D>("Main Menu\\MainMenu_BG"), 0);
             cursor.AddTexture(Game.Content.Load<Texture2D>("Main Menu\\pointer"), 0);
+            arrow = Game.Content.Load<SoundEffect>("Sounds\\crossbow");
         }
 
         public override void Update(GameTime gameTime)
@@ -104,6 +107,7 @@ namespace Laikas_Key
                 cursor.Position = new Point(cursor.Position.X, 328);
                 quitGameButtonBase.Color = Color.Transparent;
                 newGameButtonBase.Color = Color.White;
+                arrow.Play();
             }
             yield break;
         }
@@ -116,6 +120,7 @@ namespace Laikas_Key
                 cursor.Position = new Point(cursor.Position.X, 478);
                 quitGameButtonBase.Color = Color.White;
                 newGameButtonBase.Color = Color.Transparent;
+                arrow.Play();
             }
             yield break;
         }
