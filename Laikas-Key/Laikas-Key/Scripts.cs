@@ -266,16 +266,16 @@ namespace Laikas_Key
             }
 
             // Add the "self" to party
-            Character self = new Character("You", 5, 5, 5, 5, 5);
-            self.KnownAttacks.Add(Attack.shootGun);
-            self.KnownAttacks.Add(Attack.swingSword);
-            self.KnownAttacks.Add(Attack.heal);
+            Character self = new Character("JONG", 5, 5, 5, 5, 5);
+            self.KnownAttacks.Add(Attack.nuke);
+            self.KnownAttacks.Add(Attack.healNuke);
+            self.KnownAttacks.Add(Attack.kamikaze);
 
             Player.Party.Add(self);
 
-            Character me = new Character("Me", 5, 5, 5, 5, 5);
-            self.KnownAttacks.Add(Attack.shootGun);
-            self.KnownAttacks.Add(Attack.swingSword);
+            Character me = new Character("fords", 5, 5, 5, 5, 5);
+            me.KnownAttacks.Add(Attack.michizure);
+            me.KnownAttacks.Add(Attack.knife);
             Player.Party.Add(me);
 
             if (runTownScreenTutorial)

@@ -77,16 +77,55 @@ namespace Laikas_Key
                 //
                 // Create UI for Locations
                 //
-                LocationUI test_1 = new LocationUI(game, 650, 250, 128, 128, LocationData.TEST_1);
-                LocationUI test_2 = new LocationUI(game, 450, 450, 128, 128, LocationData.courtyard);
+                LocationUI test_1 = new LocationUI(game, 150, 150, 64, 64, LocationData.TEST_1);
+                LocationUI test_2 = new LocationUI(game, 150, 350, 64, 64, LocationData.courtyard);
+                LocationUI test_3 = new LocationUI(game, 150, 550, 64, 64, LocationData.cafe);
+                LocationUI test_4 = new LocationUI(game, 350, 150, 64, 64, LocationData.Erty);
+                LocationUI test_5 = new LocationUI(game, 350, 350, 64, 64, LocationData.hall);
+                LocationUI test_6 = new LocationUI(game, 350, 550, 64, 64, LocationData.HOME);
+                LocationUI test_7 = new LocationUI(game, 550, 150, 64, 64, LocationData.mindclass);
+                LocationUI test_8 = new LocationUI(game, 550, 350, 64, 64, LocationData.weaponclass);
+                LocationUI test_9 = new LocationUI(game, 550, 550, 64, 64, LocationData.willclass);
                 //LocationUI test_3 = new LocationUI(game, 650, 250, 128, 128, LocationData.TEST_3);
-                //LocationData.TEST_1.ControllingFaction = LocationData.State.ENEMY;
+                LocationData.TEST_1.ControllingFaction = LocationData.State.ENEMY;
 
                 //
                 // Add Neighbors
                 //
                 test_1.Neighbors.Add(Controller.DOWN, test_2);
+                test_1.Neighbors.Add(Controller.RIGHT, test_4);
+
                 test_2.Neighbors.Add(Controller.UP, test_1);
+                test_2.Neighbors.Add(Controller.DOWN, test_3);
+                test_2.Neighbors.Add(Controller.RIGHT, test_5);
+
+                test_3.Neighbors.Add(Controller.UP, test_2);
+                test_3.Neighbors.Add(Controller.DOWN, test_4);
+                test_3.Neighbors.Add(Controller.RIGHT, test_6);
+
+                test_4.Neighbors.Add(Controller.UP, test_3);
+                test_4.Neighbors.Add(Controller.DOWN, test_5);
+                test_4.Neighbors.Add(Controller.RIGHT, test_7);
+
+                test_5.Neighbors.Add(Controller.UP, test_4);
+                test_5.Neighbors.Add(Controller.DOWN, test_6);
+                test_5.Neighbors.Add(Controller.RIGHT, test_8);
+
+                test_6.Neighbors.Add(Controller.UP, test_5);
+                test_6.Neighbors.Add(Controller.DOWN, test_7);
+                test_6.Neighbors.Add(Controller.RIGHT, test_9);
+
+                test_7.Neighbors.Add(Controller.UP, test_6);
+                test_7.Neighbors.Add(Controller.DOWN, test_8);
+                test_7.Neighbors.Add(Controller.RIGHT, test_1);
+
+                test_8.Neighbors.Add(Controller.UP, test_7);
+                test_8.Neighbors.Add(Controller.DOWN, test_9);
+                test_8.Neighbors.Add(Controller.RIGHT, test_2);
+
+                test_9.Neighbors.Add(Controller.UP, test_8);
+                test_9.Neighbors.Add(Controller.DOWN, test_1);
+                test_9.Neighbors.Add(Controller.RIGHT, test_3);
 
                 //
                 // Add All Locations to Global List
@@ -94,6 +133,14 @@ namespace Laikas_Key
                 allLocations = new List<LocationUI>();
                 allLocations.Add(test_1);
                 allLocations.Add(test_2);
+                allLocations.Add(test_3);
+                allLocations.Add(test_4);
+                allLocations.Add(test_5);
+                allLocations.Add(test_6);
+                allLocations.Add(test_7);
+                allLocations.Add(test_8);
+                allLocations.Add(test_9);
+
                 //
                 // Default Active Location
                 //
